@@ -1,3 +1,4 @@
+/*retrigger*/
 (function () {
   'use strict';
 
