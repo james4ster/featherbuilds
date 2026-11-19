@@ -136,12 +136,13 @@
   .theme-switch .knob, .theme-switch .knob::after, .theme-switch { transition: none; }
 }
 
+
 /* ===== Value cards: append to global.css ===== */
 @property --n { syntax: "<integer>"; inherits: false; initial-value: 38; }
 
 /* Shared hover backdrop layer */
 .vcard .fx { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
-.vcard:is(:hover, :focus-visible) .fx { opacity: 1; }
+.vcard:is(:hover, :focus-visible, .is-active) .fx { opacity: 1; }
 .vcard .fx::before {
   content: ""; position: absolute; left: -20%; right: -20%; bottom: -25%; height: 70%;
   background: radial-gradient(55% 70% at 50% 100%, rgba(16, 185, 129, 0.22), transparent 70%);
@@ -151,10 +152,10 @@
 /* ---------- Speed ---------- */
 .streak {
   position: absolute; left: 0; top: var(--t); width: var(--w); height: 2px; border-radius: 2px;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6));
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.45));
   transform: translateX(-160px);
 }
-.vcard:is(:hover, :focus-visible) .streak { animation: streak var(--s, 1.1s) linear var(--dl, 0s) infinite; }
+.vcard:is(:hover, :focus-visible, .is-active) .streak { animation: streak var(--s, 1s) cubic-bezier(0.3, 0.6, 0.3, 1) var(--dl, 0s) 1 forwards; }
 @keyframes streak { from { transform: translateX(-160px); } to { transform: translateX(640px); } }
 
 .dial { position: relative; width: 11rem; height: 11rem; margin-inline: auto; }
@@ -171,24 +172,22 @@
   transition: --n 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s, color 0.6s ease 0.15s;
 }
 .dial-num::after { content: counter(n); }
-.vcard:is(:hover, :focus-visible) .dial-ring { stroke-dashoffset: 0; stroke: #10b981; }
-.vcard:is(:hover, :focus-visible) .dial-num { --n: 100; color: #10b981; }
+.vcard:is(:hover, :focus-visible, .is-active) .dial-ring { stroke-dashoffset: 0; stroke: #10b981; }
+.vcard:is(:hover, :focus-visible, .is-active) .dial-num { --n: 100; color: #10b981; }
 
 .dial-cap { display: grid; text-align: center; }
 .dial-cap > span { grid-area: 1 / 1; transition: opacity 0.4s ease 0.2s; }
 .cap-fast { opacity: 0; }
-.vcard:is(:hover, :focus-visible) .cap-slow { opacity: 0; }
-.vcard:is(:hover, :focus-visible) .cap-fast { opacity: 1; }
+.vcard:is(:hover, :focus-visible, .is-active) .cap-slow { opacity: 0; }
+.vcard:is(:hover, :focus-visible, .is-active) .cap-fast { opacity: 1; }
 
 /* ---------- Editability ---------- */
 .fx-ed {
   background-image: radial-gradient(rgba(16, 185, 129, 0.3) 1px, transparent 1.3px);
   background-size: 18px 18px;
-  -webkit-mask-image: radial-gradient(75% 60% at 50% 60%, #000, transparent);
-  mask-image: radial-gradient(75% 60% at 50% 60%, #000, transparent);
+  -webkit-mask-image: radial-gradient(75% 45% at 50% 78%, #000, transparent);
+  mask-image: radial-gradient(75% 45% at 50% 78%, #000, transparent);
 }
-.vcard:is(:hover, :focus-visible) .fx-ed { animation: drift 10s linear infinite; }
-@keyframes drift { to { background-position: 36px 36px; } }
 
 .ed-field {
   position: relative; display: flex; align-items: center; height: 2.25rem; margin-top: 0.25rem;
@@ -201,11 +200,11 @@
 .ed-toast { opacity: 0; transform: translateY(8px); }
 .ed-cursor { position: absolute; left: 55%; top: 70%; opacity: 0; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3)); }
 
-.vcard:is(:hover, :focus-visible) .ed-old { animation: fadeout 0.25s ease 0.35s forwards; }
-.vcard:is(:hover, :focus-visible) .ed-new { animation: edtype 0.6s steps(7) 0.45s forwards; }
-.vcard:is(:hover, :focus-visible) .ed-cursor { animation: edcursor 1s cubic-bezier(0.5, 0, 0.2, 1) 1.1s forwards; }
-.vcard:is(:hover, :focus-visible) .ed-btn { animation: edpress 0.35s ease 2.15s; }
-.vcard:is(:hover, :focus-visible) .ed-toast { animation: edtoast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.3s forwards; }
+.vcard:is(:hover, :focus-visible, .is-active) .ed-old { animation: fadeout 0.25s ease 0.35s forwards; }
+.vcard:is(:hover, :focus-visible, .is-active) .ed-new { animation: edtype 0.6s steps(7) 0.45s forwards; }
+.vcard:is(:hover, :focus-visible, .is-active) .ed-cursor { animation: edcursor 1s cubic-bezier(0.5, 0, 0.2, 1) 1.1s forwards; }
+.vcard:is(:hover, :focus-visible, .is-active) .ed-btn { animation: edpress 0.35s ease 2.15s; }
+.vcard:is(:hover, :focus-visible, .is-active) .ed-toast { animation: edtoast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.3s forwards; }
 @keyframes fadeout { to { opacity: 0; } }
 @keyframes edtype { from { opacity: 1; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
 @keyframes edcursor {
@@ -218,34 +217,34 @@
 
 /* ---------- SEO & AI search ---------- */
 .fx-seo .ring {
-  position: absolute; left: 50%; top: 36%; width: 6rem; height: 6rem; margin: -3rem 0 0 -3rem;
+  position: absolute; left: 50%; top: 74%; width: 6rem; height: 6rem; margin: -3rem 0 0 -3rem;
   border-radius: 50%; border: 1px solid rgba(16, 185, 129, 0.4); opacity: 0;
 }
-.vcard:is(:hover, :focus-visible) .fx-seo .ring { animation: ring 2.4s ease-out var(--dl, 0s) infinite; }
-@keyframes ring { 0% { transform: scale(0.4); opacity: 0.7; } 100% { transform: scale(4); opacity: 0; } }
+.vcard:is(:hover, :focus-visible, .is-active) .fx-seo .ring { animation: ring 2.2s ease-out var(--dl, 0s) 1 forwards; }
+@keyframes ring { 0% { transform: scale(0.4); opacity: 0.6; } 100% { transform: scale(2.4); opacity: 0; } }
 
 .serp-row {
   position: absolute; left: 0; right: 0; height: 3.4rem; padding: 0.55rem 0.75rem; border-radius: 0.75rem;
   transform: translateY(var(--y0));
   transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1) 0.25s, border-color 0.5s ease 0.8s, box-shadow 0.5s ease 0.8s;
 }
-.vcard:is(:hover, :focus-visible) .serp-row { transform: translateY(var(--y1)); }
-.vcard:is(:hover, :focus-visible) .serp-us { border-color: rgba(16, 185, 129, 0.7); box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.55); }
+.vcard:is(:hover, :focus-visible, .is-active) .serp-row { transform: translateY(var(--y1)); }
+.vcard:is(:hover, :focus-visible, .is-active) .serp-us { border-color: rgba(16, 185, 129, 0.7); box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.55); }
 .rank { position: absolute; right: 0.6rem; top: 0.55rem; display: grid; justify-items: end; }
 .rank > span { grid-area: 1 / 1; transition: opacity 0.3s ease 0.9s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s; }
 .r-to { opacity: 0; transform: scale(0.5); }
-.vcard:is(:hover, :focus-visible) .r-from { opacity: 0; }
-.vcard:is(:hover, :focus-visible) .r-to { opacity: 1; transform: none; }
+.vcard:is(:hover, :focus-visible, .is-active) .r-from { opacity: 0; }
+.vcard:is(:hover, :focus-visible, .is-active) .r-to { opacity: 1; transform: none; }
 
 .ai-pill { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease 1.4s, transform 0.5s ease 1.4s; }
-.vcard:is(:hover, :focus-visible) .ai-pill { opacity: 1; transform: none; }
-.vcard:is(:hover, :focus-visible) .spark { animation: spark 1.6s ease-in-out 1.8s infinite; }
+.vcard:is(:hover, :focus-visible, .is-active) .ai-pill { opacity: 1; transform: none; }
+.vcard:is(:hover, :focus-visible, .is-active) .spark { animation: spark 1.6s ease-in-out 1.8s infinite; }
 @keyframes spark { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.35) rotate(20deg); } }
 
 /* ---------- Peeking bird ---------- */
 .peek-wrap { position: absolute; bottom: 0; width: 4.5rem; height: 3.25rem; overflow: hidden; pointer-events: none; z-index: 20; }
-.peek { display: block; transform: translateY(108%); transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s; }
-.vcard:is(:hover, :focus-visible) .peek { transform: none; }
+.peek { display: block; transform: translateY(64%); transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s; }
+.vcard:is(:hover, :focus-visible, .is-active) .peek { transform: none; }
 
 .bird-head { --bl: #064e3b; transform-box: fill-box; transform-origin: 50% 100%; }
 .dark .bird-head { --bl: #04271e; }
@@ -266,10 +265,21 @@
 .dark .bird-wing { --bl: #04271e; }
 
 .bird-eyes { transform-box: fill-box; transform-origin: center; }
-.vcard:is(:hover, :focus-visible) .bird-head { animation: bob 2.6s ease-in-out 0.8s infinite; }
-.vcard:is(:hover, :focus-visible) .bird-eyes { animation: blink 3.6s ease 1.2s infinite; }
+.vcard:is(:hover, :focus-visible, .is-active) .bird-head { animation: bob 2.6s ease-in-out 0.8s infinite; }
+.vcard:is(:hover, :focus-visible, .is-active) .bird-eyes { animation: blink 3.6s ease 1.2s infinite; }
 @keyframes bob { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-6deg); } 70% { transform: rotate(6deg); } }
 @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.08); } }
+
+/* ---------- "Hover to preview" hint (hidden on touch, where scenes autoplay) ---------- */
+.vhint {
+  position: absolute; left: 2rem; bottom: 1.4rem; z-index: 10; display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.75rem; font-weight: 500; color: #52525b; transition: opacity 0.3s ease; pointer-events: none;
+}
+.dark .vhint { color: #a1a1aa; }
+.vhint i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #10b981; animation: hintpulse 2s ease-out infinite; }
+@keyframes hintpulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55); } 100% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } }
+.vcard:is(:hover, :focus-visible, .is-active) .vhint { opacity: 0; }
+@media (hover: none) { .vhint { display: none; } }
 
 /* ---------- Reduced motion: show end states, skip the choreography ---------- */
 @media (prefers-reduced-motion: reduce) {
@@ -277,4 +287,47 @@
     animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important; transition-delay: 0s !important;
   }
+}
+
+/* ---------- Approach steps: light-up sequence ---------- */
+/* ---------- Process steps: centered badges + connector ---------- */
+.step-badge {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 24px -6px rgba(16, 185, 129, 0.6);
+}
+.dark .step-badge { color: #6ee7b7; }
+
+/* One segment per gap: from just right of this badge to just left of the next.
+   Badge is 3rem wide, so 50% + 1.5rem is its edge; 0.75rem breathing room each side. */
+.step:not(:last-child)::after {
+  content: ""; display: none; position: absolute;
+  top: calc(1.5rem - 1px); left: calc(50% + 2.25rem); width: calc(100% - 3rem);
+  height: 2px; border-radius: 2px;
+  background:
+    linear-gradient(90deg, #10b981, #34d399) no-repeat left / 100% 100%,
+    rgba(113, 113, 122, 0.22);
+}
+@media (min-width: 768px) {
+  .step:not(:last-child)::after { display: block; }
+}
+
+/* Dim state, applied only once JS is running */
+.steps.armed .step:not(.is-lit) .step-badge {
+  color: #71717a;
+  background: rgba(113, 113, 122, 0.12);
+  border-color: rgba(113, 113, 122, 0.3);
+  box-shadow: none;
+}
+.steps.armed .step:not(.is-lit)::after { background-size: 0% 100%, auto; }
+
+/* Timing: badge lights at --dl, its line fills 0.3s later and
+   finishes just before the next badge lights (0.8s apart). */
+.steps.armed .step.is-lit .step-badge {
+  transition: color 0.5s ease var(--dl, 0s), background 0.5s ease var(--dl, 0s),
+              border-color 0.5s ease var(--dl, 0s), box-shadow 0.6s ease var(--dl, 0s);
+}
+.steps.armed .step.is-lit::after {
+  transition: background-size 0.4s linear calc(var(--dl, 0s) + 0.3s);
 }

@@ -66,7 +66,8 @@ function perchRect(el) {
   const top = Math.min(...rs.map((r) => r.top));
   const line = rs.filter((r) => r.top < top + 6);
   const left = Math.min(...line.map((r) => r.left)), right = Math.max(...line.map((r) => r.right));
-  return { left: left, right: right, top: top + 8, width: right - left };
+  const fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+return { left: left, right: right, top: top + fs * 0.26, width: right - left };
 }
 
     /* ---------- state ---------- */
@@ -80,7 +81,8 @@ function perchRect(el) {
     const feathers = [];
     const MAX_FEATHERS = 14;
     const mouse = { x: -999, y: -999, t: 0 };
-
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+      let lastScroll = 0, scrollFade = 1;
     const header = document.getElementById('site-header');
     const perchEls = Array.from(document.querySelectorAll('[data-perch]'));
     const occEls = Array.from(document.querySelectorAll('[data-occlude]'));
@@ -110,6 +112,7 @@ function perchRect(el) {
       { base: 0.99, gap: 76, h: [175, 262], w: 0.44, front: true, perch: false }
     ];
     const PERCH_S = [0.36, 0.5];
+    const FOOT = 20; // distance from bird origin to the bottom of its feet (unscaled)
 
     /* ---------- sizing ---------- */
     function size() {
@@ -403,50 +406,54 @@ gr.addColorStop(1, 'rgba(190,240,120,0)');
       if (!c.length) c = peaks;
       return c[Math.floor(Math.random() * c.length)];
     }
-    function spawnBird() {
+       function spawnBird() {
+      const small = W < 768;
+      const k = small ? 1.3 : 1;
       const fromLeft = Math.random() > 0.5;
       const x0 = fromLeft ? -60 : W + 60;
       const y0 = H * rand(0.08, 0.38);
-      if (!peaks.length || Math.random() < 0.22) {
-        const x1 = fromLeft ? W + 80 : -80, y1 = H * rand(0.1, 0.35);
-        bird = newBird(x0, y0, 0.8);
-        bird.mode = 'flyby';
-        bird.path = makePath(x0, y0, x1, y1, 0.8, 0.55, clamp(W / 260, 4, 8), rand(60, 120), 'lin');
-        bird.dropAt = rand(0.35, 0.65);
+
+      const tgt = Math.random() < (small ? 0.85 : 0.3) ? pickPerchEl() : null;
+      if (tgt) {
+        const r = perchRect(tgt.el);
+        const s1 = (tgt.el.dataset.bird === 'text' ? 0.6 : 0.65) * (small ? 1.25 : 1);
+        const tx = r.left + tgt.fx * r.width, ty = r.top - FOOT * s1;
+        bird = newBird(x0, y0, 0.9);
+        bird.mode = 'arrive'; bird.perchEl = tgt.el; bird.perchFx = tgt.fx; bird.onEl = true;
+        bird.path = makePath(x0, y0, tx, ty, 0.9, s1, clamp(Math.hypot(tx - x0, ty - y0) / 210, 2.8, 6), rand(50, 120), 'out');
         return;
       }
-      const tgt = Math.random() < 0.3 ? pickPerchEl() : null;
-if (tgt) {
-  const r = perchRect(tgt.el), s1 = tgt.el.dataset.bird === 'text' ? 0.6 : 0.65;
-  const tx = r.left + tgt.fx * r.width, ty = r.top - 19.5 * s1;
-  bird = newBird(x0, y0, 0.9);
-  bird.mode = 'arrive'; bird.perchEl = tgt.el; bird.perchFx = tgt.fx; bird.onEl = true;
-  bird.path = makePath(x0, y0, tx, ty, 0.9, s1, clamp(Math.hypot(tx - x0, ty - y0) / 210, 2.8, 6), rand(50, 120), 'out');
-  return;
-}
+      if (small || !peaks.length || Math.random() < 0.22) {
+        const x1 = fromLeft ? W + 80 : -80, y1 = H * rand(0.1, 0.35);
+        bird = newBird(x0, y0, 0.8 * k);
+        bird.mode = 'flyby'; bird.onEl = true;
+        bird.path = makePath(x0, y0, x1, y1, 0.8 * k, 0.55 * k, clamp(W / 260, 4, 8), rand(60, 120), 'lin');
+        return;
+      }
       const pk = pickPeak(null);
       const s1 = PERCH_S[pk.layer];
-      const ty = pk.y - 17 * s1;
+      const ty = pk.y - (FOOT - 2) * s1;
       bird = newBird(x0, y0, 0.9);
       bird.mode = 'arrive'; bird.peak = pk;
       bird.path = makePath(x0, y0, pk.x, ty, 0.9, s1, clamp(Math.hypot(pk.x - x0, ty - y0) / 210, 2.8, 6), rand(50, 120), 'out');
     }
-    function depart() {
+
+    function depart(fast) {
   const b = bird;
-  if (Math.random() < 0.8) {
+  if (!fast && Math.random() < 0.8) {
     releaseFeather(b.x - b.facing * 4 * b.s, b.y + 6 * b.s, clamp(0.18 + (b.s - 0.3) * 0.5, 0.18, 0.5));
   }
-  if (Math.random() < 0.35 && peaks.length > 2) {
+  if (!fast && W >= 768 && Math.random() < 0.35 && peaks.length > 2) {
     const pk = pickPeak(b.peak);
     const s1 = PERCH_S[pk.layer];
-    const ty = pk.y - 17 * s1;
+    const ty = pk.y - (FOOT - 2) * s1;
     b.mode = 'hop'; b.peak = pk; b.perchEl = null;
     b.path = makePath(b.x, b.y, pk.x, ty, b.s, s1, clamp(Math.hypot(pk.x - b.x, ty - b.y) / 180, 1.6, 4), rand(30, 80), 'io');
   } else {
     const dir = Math.random() > 0.5 ? 1 : -1;
     const x1 = dir > 0 ? W + 100 : -100, y1 = -60 + Math.random() * H * 0.25;
-    b.mode = 'depart';
-    b.path = makePath(b.x, b.y, x1, y1, b.s, 0.95, rand(3.2, 4.4), rand(40, 100), 'in');
+    b.mode = 'depart'; b.perchEl = null;
+    b.path = makePath(b.x, b.y, x1, y1, b.s, 0.95, fast ? rand(1.6, 2.4) : rand(3.2, 4.4), rand(40, 100), 'in');
   }
 }
     function updateBird(dt) {
@@ -460,16 +467,23 @@ if (tgt) {
         if (!b.turned && b.timer > b.turnAt) { b.turned = true; b.facing *= -1; }
         if (!b.dropped && b.timer > b.dropAt) { b.dropped = true; b.chirp = 0.4; } // chirp only, no feather
 
-        if (b.perchEl) {                      // stay glued to the element while scrolling
-            const r = perchRect(b.perchEl);
-            if (r.top < headerBottom + 20 || r.top > H - 40) { depart(); return; }
-            b.x = r.left + b.perchFx * r.width;
-            b.y = r.top - 19.5 * b.s;
+        if (b.perchEl) {
+          const r = perchRect(b.perchEl);
+          const scrolling = performance.now() - lastScroll < 120;
+          if (r.top < headerBottom + 20 || r.top > H - 40 || (scrolling && b.timer > 0.6)) { depart(true); return; }
+          b.x = r.left + b.perchFx * r.width;
+          b.y = r.top - FOOT * b.s;
         }
         if (b.timer > b.dur) depart();
         return;
         }
       const p = b.path;
+
+      if (b.mode === 'arrive' && b.perchEl) {
+        const r = perchRect(b.perchEl);
+        p.x1 = r.left + b.perchFx * r.width; p.y1 = r.top - FOOT * p.s1;
+      }
+
       p.t += dt / p.dur;
       const t = clamp(p.t, 0, 1);
       const u = p.ease === 'out' ? easeOut(t) : p.ease === 'in' ? easeIn(t) : p.ease === 'io' ? easeInOut(t) : t;
@@ -704,7 +718,7 @@ if (tgt) {
       if (!sp) return;
       const sz = 0.95 * f.depth;
       fg.save();
-      fg.globalAlpha = f.alpha * (0.4 + 0.6 * f.depth);
+      fg.globalAlpha = f.alpha * (0.4 + 0.6 * f.depth) * (f.state === 'drift' ? 1 : scrollFade);
       fg.translate(f.x, f.y);
       if (f.state !== 'drift' && !dark) {
         fg.fillStyle = 'rgba(6,78,59,0.14)';
@@ -724,7 +738,11 @@ if (tgt) {
       rects.clear();
       perchEls.forEach((el) => rects.set(el, el.getBoundingClientRect()));
 
-      if (!bird && clock >= nextBirdAt) spawnBird();
+      if (coarse) {
+  const target = performance.now() - lastScroll < 120 ? 0 : 1;
+  scrollFade += (target - scrollFade) * Math.min(1, dt * (target ? 6 : 16));
+}
+      if (!bird && clock >= nextBirdAt && performance.now() - lastScroll > 500) spawnBird();
       if (bird) updateBird(dt);
 
       if (dark) {
@@ -774,9 +792,10 @@ if (tgt) {
         bg.globalAlpha = 1;
       }
 
-      const behind = bird && bird.mode === 'perch' && bird.peak && bird.peak.layer === 0;
-      if (behind) drawBird(bg, bird, dark);
+      const inTree = bird && bird.mode === 'perch' && bird.peak && !bird.perchEl;
+      if (inTree && bird.peak.layer === 0) drawBird(bg, bird, dark);
       bg.drawImage(frontCache, 0, 0, W, H);
+      if (inTree && bird.peak.layer !== 0) drawBird(bg, bird, dark);
 
       if (dark && fireflySprite) {
   fireflies.forEach((ff) => {
@@ -794,11 +813,10 @@ if (tgt) {
     function renderFg(dark) {
       fg.setTransform(DPR, 0, 0, DPR, 0, 0);
       fg.clearRect(0, 0, W, H);
-      if (bird && !behind && !bird.onEl) drawBird(bg, bird, dark);
+      if (bird && !(bird.mode === 'perch' && bird.peak && !bird.perchEl)) drawBird(fg, bird, dark);
       for (let i = 0; i < feathers.length; i++) drawFeather(feathers[i], dark);
     }
 
-    if (bird && bird.onEl) drawBird(fg, bird, dark);
     /* ---------- loop ---------- */
     let raf = 0, last = 0, running = false;
     function frame(ts) {
@@ -830,6 +848,7 @@ if (tgt) {
       startLoop();
       window.addEventListener('pointermove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; mouse.t = performance.now(); }, { passive: true });
       document.addEventListener('visibilitychange', () => { if (document.hidden) stopLoop(); else startLoop(); });
+      window.addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
     }
     bgCanvas.style.opacity = '1';
     fgCanvas.style.opacity = '1';

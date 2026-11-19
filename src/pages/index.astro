@@ -1,6 +1,18 @@
 ---
 import '../styles/global.css';
 
+const steps = [
+  { n: '01', t: 'Designed Around Your Taste', d: 'Tell us about the experience you want to create. Direct every detail yourself or let us create something original to your liking.' },
+  { n: '02', t: 'Custom Code, Feather-Light', d: 'Hand-coded from the ground up for a one-of-a-kind, studio-grade design and near-perfect Google PageSpeed scores.' },
+  { n: '03', t: ' Edits Without Change Orders', d: 'Change a headline, add a photo, update a product, or post events anytime without touching code.' }
+]; 
+/*
+const steps = [
+  { n: '01', t: 'One short conversation', d: 'Tell us about your business and the look you want. No long questionnaires, no homework.' },
+  { n: '02', t: 'We design and build it', d: 'Hand-coded around your brand. You review a preview and tell us what to change. We do the rest.' },
+  { n: '03', t: 'Launch, then relax', d: 'We take it live. Edit it yourself anytime, or just text us and we will make the change.' }
+];
+*/
 const included = [
   { t: 'Designed and coded by hand', d: 'Every layout is built around your brand. No templates, no page builders.' },
   { t: 'Fast, secure hosting', d: 'Pre-built pages on a global edge network, with no database or plugins exposed to attack.' },
@@ -61,10 +73,10 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
 
   <body class="bg-linear-to-b from-sky-100 via-emerald-50/60 to-emerald-100/40 text-zinc-900 dark:from-[#05070a] dark:via-[#08100f] dark:to-[#06130f] dark:text-zinc-100 antialiased overflow-x-hidden transition-colors duration-500 min-h-screen">
 
-    <canvas id="forest-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0" aria-hidden="true"></canvas>
+    <canvas id="forest-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-0" aria-hidden="true"></canvas>
 
     <header id="site-header" class="sticky top-0 z-30 border-b border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md transition-colors duration-300">
-      <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <a href="#" class="flex items-center gap-2.5 font-display font-extrabold text-xl tracking-tight text-zinc-950 dark:text-white">
           <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -77,8 +89,8 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400" aria-label="Primary">
-          <a href="#approach" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Approach</a>
-          <a href="#value" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why FeatherBuilds</a>
+          <a href="#value" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why Featherbuilds</a>
+          <a href="#process" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Our Process</a>
           <a href="#pricing" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Pricing</a>
         </nav>
 
@@ -97,12 +109,7 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
     <main class="relative z-10">
 
       <!-- HERO -->
-      <section class="max-w-6xl mx-auto px-6 pt-16 pb-32 md:pt-24 md:pb-40 text-center">
-
-        <div data-perch="1" class="rise inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-white/[0.04] border border-emerald-500/20 dark:border-white/10 text-xs font-medium text-emerald-700 dark:text-emerald-300 mb-8 backdrop-blur-sm" style="--d:0.05s">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
-          100% Hand-Coded · Zero Page-Builder Bloat
-        </div>
+      <section class="max-w-7xl mx-auto px-6 pt-16 pb-32 md:pt-24 md:pb-40 text-center">
 
         <h1 data-bird="text" class="rise font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-4xl mx-auto leading-[1.08]" style="--d:0.15s">
           Agency-grade design that feels <span class="grad-text">feather-light.</span>
@@ -120,79 +127,38 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
             How We Build
           </a>
         </div>
-
-        <div id="feather-landing-zone" data-perch="5" data-occlude data-bird class="rise mt-20 md:mt-24 max-w-4xl mx-auto rounded-2xl bg-white/90 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200/90 dark:border-white/10 ring-1 ring-inset ring-white/60 dark:ring-white/5 p-6 sm:p-10 shadow-xl dark:shadow-2xl relative transition-colors duration-300" style="--d:0.55s">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div data-perch="1" class="p-5 rounded-xl bg-zinc-50/90 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/5">
-              <div class="text-xs font-semibold tracking-wide text-zinc-500">Google PageSpeed</div>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 font-display">100</span>
-                <span class="text-sm text-zinc-500 dark:text-zinc-400">/ 100</span>
-              </div>
-              <p class="mt-2 text-xs text-zinc-600 dark:text-zinc-400">No render-blocking scripts, no bloated plugins.</p>
-            </div>
-
-            <div data-perch="1" class="p-5 rounded-xl bg-zinc-50/90 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/5">
-              <div class="text-xs font-semibold tracking-wide text-zinc-500">First Contentful Paint</div>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-4xl font-extrabold text-zinc-950 dark:text-white font-display">0.4s</span>
-                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Instant</span>
-              </div>
-              <p class="mt-2 text-xs text-zinc-600 dark:text-zinc-400">Edge-cached so visitors never wait.</p>
-            </div>
-
-            <div data-perch="1" class="p-5 rounded-xl bg-zinc-50/90 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/5">
-              <div class="text-xs font-semibold tracking-wide text-zinc-500">Total Page Weight</div>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-4xl font-extrabold text-zinc-950 dark:text-white font-display">&lt;45KB</span>
-                <span class="text-xs text-zinc-500 dark:text-zinc-400">vs 3.8MB avg</span>
-              </div>
-              <p class="mt-2 text-xs text-zinc-600 dark:text-zinc-400">Smooth vector motion, drawn at 60fps.</p>
-            </div>
-          </div>
-          <p class="mt-5 text-xs text-zinc-500 text-center">
-            Watch the forest. A bird glides in to perch, and now and then a feather drifts down onto the page. Move your cursor through the pile.
-          </p>
-        </div>
-      </section>
-
-      <!-- APPROACH -->
-      <section id="approach" class="max-w-6xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
-        <div data-perch="2" class="rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md p-8 sm:p-12 md:p-16">
-          <div class="grid md:grid-cols-12 gap-10 md:gap-16">
-            <h2 class="md:col-span-5 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
-              Built by hand, so it can be fast and still be yours.
-            </h2>
-            <div class="md:col-span-7 space-y-6 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[62ch]">
-              <p>
-                Every FeatherBuilds site is designed and coded from scratch. No templates, no page builders, no plugin pile-up. We build with Astro, which pre-builds each page into lean HTML and ships JavaScript only where it genuinely improves the experience, so your site opens almost instantly and stays that way.
-              </p>
-              <p>
-                Speed shouldn’t lock you out of your own website. Every site comes with a simple editor built around your content. Change a headline, post an event, swap a photo, then publish. The live site refreshes within minutes, with no developer in the loop and no risk of breaking the design.
-              </p>
-            </div>
-          </div>
-        </div>
+        <ul class="rise mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-medium text-zinc-600 dark:text-zinc-400" style="--d:0.5s">
+  <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>No page builders</li>
+  <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Coded by hand</li>
+  <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Built for speed</li>
+</ul>
+        
       </section>
 
        <!-- VALUE -->
       <section id="value" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
-        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl">
-          Fast to load, simple to edit, easy to find.
-        </h2>
+        <div class="max-w-3xl mx-auto text-center">
+  <p class="text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300">What we do</p>
+  <h2 class="mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
+    Never worry about your website again.
+  </h2>
+  <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[62ch]">
+    We craft custom, high-speed websites for businesses that want to stand out online instead of looking like a vibe-coded template. By writing clean, modern code from scratch—instead of relying on sluggish templates or page builders—we deliver studio-grade design that loads instantaneously and ranks higher on Google. And once you launch, you’re always in control—upload images, update products, or post new events yourself in seconds without touching code.
+  </p>
+</div>
 
         <div class="mt-14 grid lg:grid-cols-3 gap-6">
 
           <!-- SPEED -->
-          <article id="speed" tabindex="0" data-perch="2" class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
+          <article id="speed" tabindex="0" data-perch="2" data-bird class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
             <div class="fx fx-speed" aria-hidden="true">
-              <i class="streak" style="--t:12%;--w:120px;--dl:0s;--s:1s"></i>
-              <i class="streak" style="--t:24%;--w:80px;--dl:.35s;--s:.8s"></i>
-              <i class="streak" style="--t:38%;--w:150px;--dl:.15s;--s:1.2s"></i>
-              <i class="streak" style="--t:52%;--w:90px;--dl:.6s;--s:.9s"></i>
-              <i class="streak" style="--t:64%;--w:130px;--dl:.25s;--s:1.1s"></i>
-              <i class="streak" style="--t:76%;--w:70px;--dl:.5s;--s:.75s"></i>
-              <i class="streak" style="--t:88%;--w:110px;--dl:.1s;--s:1s"></i>
+              <i class="streak" style="--t:50%;--w:120px;--dl:0s;--s:1s"></i>
+              <i class="streak" style="--t:57%;--w:80px;--dl:.35s;--s:.8s"></i>
+              <i class="streak" style="--t:64%;--w:150px;--dl:.15s;--s:1.2s"></i>
+              <i class="streak" style="--t:71%;--w:90px;--dl:.6s;--s:.9s"></i>
+              <i class="streak" style="--t:78%;--w:130px;--dl:.25s;--s:1.1s"></i>
+              <i class="streak" style="--t:85%;--w:70px;--dl:.5s;--s:.75s"></i>
+              <i class="streak" style="--t:91%;--w:110px;--dl:.1s;--s:1s"></i>
             </div>
             <div class="relative z-10">
               <h3 class="font-display text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Speed</h3>
@@ -218,7 +184,7 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
           </article>
 
           <!-- EDITABILITY -->
-          <article id="editing" tabindex="0" data-perch="2" class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
+          <article id="editing" tabindex="0" data-perch="2" data-bird class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
             <div class="fx fx-ed" aria-hidden="true"></div>
             <div class="relative z-10">
               <h3 class="font-display text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Editability</h3>
@@ -247,11 +213,11 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
                 <svg class="ed-cursor" viewBox="0 0 24 24" width="20" height="20"><path d="M5 3l14 7-6 2-2 6z" fill="#fff" stroke="#04271e" stroke-width="1.5" stroke-linejoin="round"/></svg>
               </div>
             </div>
-            <div class="peek-wrap" style="left:50%;margin-left:-2.25rem"><Fragment set:html={bird} /></div>
+            <div class="peek-wrap" style="right:2.5rem"><Fragment set:html={bird} /></div>
           </article>
 
           <!-- SEO -->
-          <article id="seo" tabindex="0" data-perch="2" class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
+          <article id="seo" tabindex="0" data-perch="2" data-bird class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
             <div class="fx fx-seo" aria-hidden="true">
               <i class="ring" style="--dl:0s"></i><i class="ring" style="--dl:.8s"></i><i class="ring" style="--dl:1.6s"></i>
             </div>
@@ -290,11 +256,44 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
         </div>
       </section>
 
-      <!-- PRICING -->
-      <section id="pricing" class="max-w-6xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
-        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl">
-          One plan. Everything included.
+
+      <!-- APPROACH -->
+      <section id="process" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+        <div class="max-w-2xl mx-auto text-center">
+        <p class="text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300">Our process</p>
+        <h2 class="mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
+          Light on your time, start to finish.
         </h2>
+        <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[56ch]">
+          You run your business. We handle the design, the code and the launch, and you only step in where your input matters.
+        </p>
+      </div>
+
+        <ol class="steps mt-14 grid md:grid-cols-3 gap-x-6 gap-y-10">
+  {steps.map((s) => (
+    <li class="step relative flex flex-col items-center">
+      <span class="step-badge inline-flex items-center justify-center w-12 h-12 rounded-full font-display font-extrabold">
+        {s.n}
+      </span>
+      <div data-perch="2" data-bird class="mt-6 w-full flex-1 rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 text-center transition-colors duration-300 hover:border-emerald-500/40">
+        <h3 class="font-display text-xl font-extrabold tracking-tight text-zinc-950 dark:text-white">{s.t}</h3>
+        <p class="mt-3 leading-relaxed text-zinc-700 dark:text-zinc-300">{s.d}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+      </section>
+
+        
+
+     <!-- PRICING -->
+<section id="pricing" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+  <div class="max-w-2xl mx-auto text-center">
+    <p class="text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300">Pricing</p>
+    <h2 class="mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
+      One plan. Everything included.
+    </h2>
+  </div>
 
         <div data-perch="3" class="mt-12 rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md grid lg:grid-cols-12 overflow-hidden">
           <div class="lg:col-span-5 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-zinc-200/80 dark:border-white/10 bg-emerald-500/[0.06]">
@@ -328,7 +327,7 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
       </section>
 
       <!-- CONTACT -->
-      <section id="contact" class="max-w-6xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+      <section id="contact" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
         <div data-perch="2" class="rounded-3xl border border-emerald-500/25 bg-emerald-500/[0.08] backdrop-blur-md p-10 md:p-16 text-center">
           <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl mx-auto">
             Tell us about your business.
@@ -344,11 +343,39 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
     </main>
 
     <footer class="relative z-10 border-t border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md">
-      <div class="max-w-6xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
+      <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
     </footer>
 
-    <canvas id="feather-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-40" aria-hidden="true"></canvas>
+    <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-40" aria-hidden="true"></canvas>
 
     <script src="/feathers.js" defer></script>
+    <script is:inline>
+  (function () {
+    if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle('is-active', e.isIntersecting); });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.vcard').forEach(function (c) { io.observe(c); });
+  })();
+
+  (function () {
+    var ol = document.querySelector('.steps');
+    if (!ol || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // stays fully lit
+    var steps = Array.prototype.slice.call(ol.querySelectorAll('.step'));
+    var wide = window.matchMedia('(min-width: 768px)');
+    ol.classList.add('armed');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = steps.indexOf(e.target);
+        e.target.style.setProperty('--dl', (wide.matches ? i * 0.8 : 0) + 's');
+        e.target.classList.add('is-lit');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.6 });
+    steps.forEach(function (s) { io.observe(s); });
+  })();
+</script>
   </body>
 </html>
