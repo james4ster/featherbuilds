@@ -57,3 +57,224 @@
   .grad-text { animation: none; }
   html { scroll-behavior: auto; }
 }
+/* ---- Theme switch: orange sun (light) / pale-yellow crescent moon (dark) ---- */
+.theme-switch {
+  position: relative;
+  width: 3.5rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(228, 228, 231, 0.9);
+  background: linear-gradient(180deg, #7dd3fc, #bae6fd);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.5s ease, border-color 0.5s ease;
+}
+.dark .theme-switch {
+  background: linear-gradient(180deg, #0b1220, #10203a);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.theme-switch::before { /* stars, dark only */
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 8px 7px 0 -0.4px #fff, 3px 14px 0 -0.4px rgba(255, 255, 255, 0.7);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.dark .theme-switch::before { opacity: 0.9; }
+
+.theme-switch .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fb923c;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.28), 0 0 14px rgba(251, 146, 60, 0.75);
+  transition: transform 0.5s cubic-bezier(0.5, 0, 0.2, 1), background 0.5s ease, box-shadow 0.5s ease;
+}
+.dark .theme-switch .knob {
+  transform: translateX(1.6rem);
+  background: #fde68a;
+  box-shadow: 0 0 0 3px rgba(253, 230, 138, 0.15), 0 0 14px rgba(253, 230, 138, 0.55);
+}
+.theme-switch .knob::after { /* carves the crescent */
+  content: "";
+  position: absolute;
+  top: -0.3rem;
+  right: -0.5rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: #10203a;
+  transform: scale(0);
+  transition: transform 0.5s ease;
+}
+.dark .theme-switch .knob::after { transform: scale(1); }
+
+/* ---- Blinking caret in the editor mock ---- */
+@keyframes caret { 50% { opacity: 0; } }
+.caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: #10b981;
+  animation: caret 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+  .theme-switch .knob, .theme-switch .knob::after, .theme-switch { transition: none; }
+}
+
+/* ===== Value cards: append to global.css ===== */
+@property --n { syntax: "<integer>"; inherits: false; initial-value: 38; }
+
+/* Shared hover backdrop layer */
+.vcard .fx { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
+.vcard:is(:hover, :focus-visible) .fx { opacity: 1; }
+.vcard .fx::before {
+  content: ""; position: absolute; left: -20%; right: -20%; bottom: -25%; height: 70%;
+  background: radial-gradient(55% 70% at 50% 100%, rgba(16, 185, 129, 0.22), transparent 70%);
+}
+.vcard:focus-visible { outline: 2px solid #10b981; outline-offset: 3px; }
+
+/* ---------- Speed ---------- */
+.streak {
+  position: absolute; left: 0; top: var(--t); width: var(--w); height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6));
+  transform: translateX(-160px);
+}
+.vcard:is(:hover, :focus-visible) .streak { animation: streak var(--s, 1.1s) linear var(--dl, 0s) infinite; }
+@keyframes streak { from { transform: translateX(-160px); } to { transform: translateX(640px); } }
+
+.dial { position: relative; width: 11rem; height: 11rem; margin-inline: auto; }
+.dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.dial-track { stroke: rgba(113, 113, 122, 0.25); }
+.dial-ring {
+  stroke: #f97316; stroke-dasharray: 276.46; stroke-dashoffset: 171.4;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s, stroke 0.6s ease 0.15s;
+}
+.dial-num {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 3.25rem; color: #f97316;
+  --n: 38; counter-reset: n var(--n);
+  transition: --n 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s, color 0.6s ease 0.15s;
+}
+.dial-num::after { content: counter(n); }
+.vcard:is(:hover, :focus-visible) .dial-ring { stroke-dashoffset: 0; stroke: #10b981; }
+.vcard:is(:hover, :focus-visible) .dial-num { --n: 100; color: #10b981; }
+
+.dial-cap { display: grid; text-align: center; }
+.dial-cap > span { grid-area: 1 / 1; transition: opacity 0.4s ease 0.2s; }
+.cap-fast { opacity: 0; }
+.vcard:is(:hover, :focus-visible) .cap-slow { opacity: 0; }
+.vcard:is(:hover, :focus-visible) .cap-fast { opacity: 1; }
+
+/* ---------- Editability ---------- */
+.fx-ed {
+  background-image: radial-gradient(rgba(16, 185, 129, 0.3) 1px, transparent 1.3px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(75% 60% at 50% 60%, #000, transparent);
+  mask-image: radial-gradient(75% 60% at 50% 60%, #000, transparent);
+}
+.vcard:is(:hover, :focus-visible) .fx-ed { animation: drift 10s linear infinite; }
+@keyframes drift { to { background-position: 36px 36px; } }
+
+.ed-field {
+  position: relative; display: flex; align-items: center; height: 2.25rem; margin-top: 0.25rem;
+  padding: 0 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(161, 161, 170, 0.35);
+  background: rgba(255, 255, 255, 0.7);
+}
+.dark .ed-field { background: rgba(9, 9, 11, 0.55); border-color: rgba(255, 255, 255, 0.1); }
+.ed-new { position: absolute; left: 0.75rem; opacity: 0; clip-path: inset(0 100% 0 0); white-space: nowrap; }
+.ed-btn { display: inline-block; }
+.ed-toast { opacity: 0; transform: translateY(8px); }
+.ed-cursor { position: absolute; left: 55%; top: 70%; opacity: 0; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3)); }
+
+.vcard:is(:hover, :focus-visible) .ed-old { animation: fadeout 0.25s ease 0.35s forwards; }
+.vcard:is(:hover, :focus-visible) .ed-new { animation: edtype 0.6s steps(7) 0.45s forwards; }
+.vcard:is(:hover, :focus-visible) .ed-cursor { animation: edcursor 1s cubic-bezier(0.5, 0, 0.2, 1) 1.1s forwards; }
+.vcard:is(:hover, :focus-visible) .ed-btn { animation: edpress 0.35s ease 2.15s; }
+.vcard:is(:hover, :focus-visible) .ed-toast { animation: edtoast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.3s forwards; }
+@keyframes fadeout { to { opacity: 0; } }
+@keyframes edtype { from { opacity: 1; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+@keyframes edcursor {
+  0% { left: 55%; top: 70%; opacity: 0; }
+  20% { opacity: 1; }
+  100% { left: 84%; top: 7%; opacity: 1; }
+}
+@keyframes edpress { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.88); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.3); } }
+@keyframes edtoast { to { opacity: 1; transform: none; } }
+
+/* ---------- SEO & AI search ---------- */
+.fx-seo .ring {
+  position: absolute; left: 50%; top: 36%; width: 6rem; height: 6rem; margin: -3rem 0 0 -3rem;
+  border-radius: 50%; border: 1px solid rgba(16, 185, 129, 0.4); opacity: 0;
+}
+.vcard:is(:hover, :focus-visible) .fx-seo .ring { animation: ring 2.4s ease-out var(--dl, 0s) infinite; }
+@keyframes ring { 0% { transform: scale(0.4); opacity: 0.7; } 100% { transform: scale(4); opacity: 0; } }
+
+.serp-row {
+  position: absolute; left: 0; right: 0; height: 3.4rem; padding: 0.55rem 0.75rem; border-radius: 0.75rem;
+  transform: translateY(var(--y0));
+  transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1) 0.25s, border-color 0.5s ease 0.8s, box-shadow 0.5s ease 0.8s;
+}
+.vcard:is(:hover, :focus-visible) .serp-row { transform: translateY(var(--y1)); }
+.vcard:is(:hover, :focus-visible) .serp-us { border-color: rgba(16, 185, 129, 0.7); box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.55); }
+.rank { position: absolute; right: 0.6rem; top: 0.55rem; display: grid; justify-items: end; }
+.rank > span { grid-area: 1 / 1; transition: opacity 0.3s ease 0.9s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s; }
+.r-to { opacity: 0; transform: scale(0.5); }
+.vcard:is(:hover, :focus-visible) .r-from { opacity: 0; }
+.vcard:is(:hover, :focus-visible) .r-to { opacity: 1; transform: none; }
+
+.ai-pill { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease 1.4s, transform 0.5s ease 1.4s; }
+.vcard:is(:hover, :focus-visible) .ai-pill { opacity: 1; transform: none; }
+.vcard:is(:hover, :focus-visible) .spark { animation: spark 1.6s ease-in-out 1.8s infinite; }
+@keyframes spark { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.35) rotate(20deg); } }
+
+/* ---------- Peeking bird ---------- */
+.peek-wrap { position: absolute; bottom: 0; width: 4.5rem; height: 3.25rem; overflow: hidden; pointer-events: none; z-index: 20; }
+.peek { display: block; transform: translateY(108%); transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s; }
+.vcard:is(:hover, :focus-visible) .peek { transform: none; }
+
+.bird-head { --bl: #064e3b; transform-box: fill-box; transform-origin: 50% 100%; }
+.dark .bird-head { --bl: #04271e; }
+.bird-body { fill: #10b981; stroke: var(--bl); stroke-width: 2.2; }
+.dark .bird-body { fill: #34d399; }
+.bird-belly { fill: #ecfdf5; }
+.dark .bird-belly { fill: #d1fae5; }
+.bird-crest { fill: none; stroke: var(--bl); stroke-width: 2.4; stroke-linecap: round; }
+.bird-blush { fill: rgba(251, 113, 133, 0.55); }
+.eye-w { fill: #fff; stroke: var(--bl); stroke-width: 1; }
+.eye-p { fill: #04271e; }
+.eye-h { fill: #fff; }
+.bird-beak { fill: #f59e0b; stroke: var(--bl); stroke-width: 1.6; stroke-linejoin: round; }
+.dark .bird-beak { fill: #fbbf24; }
+.bird-wing ellipse { fill: #047857; stroke: var(--bl); stroke-width: 2; }
+.dark .bird-wing ellipse { fill: #059669; }
+.bird-wing { --bl: #064e3b; }
+.dark .bird-wing { --bl: #04271e; }
+
+.bird-eyes { transform-box: fill-box; transform-origin: center; }
+.vcard:is(:hover, :focus-visible) .bird-head { animation: bob 2.6s ease-in-out 0.8s infinite; }
+.vcard:is(:hover, :focus-visible) .bird-eyes { animation: blink 3.6s ease 1.2s infinite; }
+@keyframes bob { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-6deg); } 70% { transform: rotate(6deg); } }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.08); } }
+
+/* ---------- Reduced motion: show end states, skip the choreography ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .vcard *, .vcard *::before, .vcard *::after {
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important;
+  }
+}

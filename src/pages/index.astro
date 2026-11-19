@@ -1,5 +1,30 @@
 ---
 import '../styles/global.css';
+
+const included = [
+  { t: 'Designed and coded by hand', d: 'Every layout is built around your brand. No templates, no page builders.' },
+  { t: 'Fast, secure hosting', d: 'Pre-built pages on a global edge network, with no database or plugins exposed to attack.' },
+  { t: 'Your own editing studio', d: 'Update text, photos and offers yourself in Sanity whenever you like.' },
+  { t: 'SEO foundations', d: 'Clean markup, fast Core Web Vitals and metadata done properly.' },
+  { t: 'Edit it yourself', d: 'Update text, photos and events yourself whenever you like.' },
+  { t: 'Support from the owner', d: 'Call or text and you reach the person who built your site.' }
+];
+const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-hidden="true">
+  <g class="bird-head">
+    <path class="bird-crest" d="M30 19q-3-8 2-10M37 17q0-9 5-10M43 19q4-6 8-5"/>
+    <circle class="bird-body" cx="36" cy="40" r="22"/>
+    <ellipse class="bird-belly" cx="36" cy="52" rx="14" ry="8"/>
+    <circle class="bird-blush" cx="19" cy="42" r="4"/>
+    <circle class="bird-blush" cx="53" cy="42" r="4"/>
+    <g class="bird-eyes">
+      <circle class="eye-w" cx="27" cy="35" r="6.2"/><circle class="eye-w" cx="45" cy="35" r="6.2"/>
+      <circle class="eye-p" cx="28.2" cy="34" r="3.4"/><circle class="eye-p" cx="46.2" cy="34" r="3.4"/>
+      <circle class="eye-h" cx="29.4" cy="32.6" r="1.3"/><circle class="eye-h" cx="47.4" cy="32.6" r="1.3"/>
+    </g>
+    <path class="bird-beak" d="M32.5 41h7l-3.5 6.5z"/>
+  </g>
+  <g class="bird-wing"><ellipse cx="13" cy="49" rx="10" ry="5.5"/><ellipse cx="59" cy="49" rx="10" ry="5.5"/></g>
+</svg>`;
 ---
 
 <html lang="en" class="dark scroll-smooth">
@@ -36,7 +61,6 @@ import '../styles/global.css';
 
   <body class="bg-linear-to-b from-sky-100 via-emerald-50/60 to-emerald-100/40 text-zinc-900 dark:from-[#05070a] dark:via-[#08100f] dark:to-[#06130f] dark:text-zinc-100 antialiased overflow-x-hidden transition-colors duration-500 min-h-screen">
 
-    <!-- Back layer: sky, moon/sun, mountains, forest, bird, fireflies -->
     <canvas id="forest-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0" aria-hidden="true"></canvas>
 
     <header id="site-header" class="sticky top-0 z-30 border-b border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md transition-colors duration-300">
@@ -53,20 +77,14 @@ import '../styles/global.css';
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400" aria-label="Primary">
-          <a href="#work" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Work</a>
-          <a href="#speed" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why Speed Matters</a>
+          <a href="#approach" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Approach</a>
+          <a href="#value" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why FeatherBuilds</a>
           <a href="#pricing" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Pricing</a>
         </nav>
 
         <div class="flex items-center gap-3">
-          <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="p-2.5 rounded-full border border-zinc-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-emerald-500/50 transition-colors cursor-pointer">
-            <svg class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="4"></circle>
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-            </svg>
-            <svg class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-            </svg>
+          <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="theme-switch">
+            <span class="knob"></span>
           </button>
 
           <a href="#contact" class="px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
@@ -77,6 +95,8 @@ import '../styles/global.css';
     </header>
 
     <main class="relative z-10">
+
+      <!-- HERO -->
       <section class="max-w-6xl mx-auto px-6 pt-16 pb-32 md:pt-24 md:pb-40 text-center">
 
         <div data-perch="1" class="rise inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-white/[0.04] border border-emerald-500/20 dark:border-white/10 text-xs font-medium text-emerald-700 dark:text-emerald-300 mb-8 backdrop-blur-sm" style="--d:0.05s">
@@ -84,7 +104,7 @@ import '../styles/global.css';
           100% Hand-Coded · Zero Page-Builder Bloat
         </div>
 
-        <h1 class="rise font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-4xl mx-auto leading-[1.08]" style="--d:0.15s">
+        <h1 data-bird="text" class="rise font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-4xl mx-auto leading-[1.08]" style="--d:0.15s">
           Agency-grade design that feels <span class="grad-text">feather-light.</span>
         </h1>
 
@@ -92,17 +112,16 @@ import '../styles/global.css';
           We build custom, motion-rich websites that load fast and score at the top of Google PageSpeed, turning more local traffic into paying customers.
         </p>
 
-        <div class="rise mt-10 flex flex-col sm:flex-row items-center justify-center gap-4" style="--d:0.4s">
-          <a data-perch="1" href="#pricing" class="w-full sm:w-auto px-8 py-4 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold text-base hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.45)]">
-            See Packages ($0 Down)
+        <div class="rise mt-12 flex flex-col sm:flex-row items-center justify-center gap-4" style="--d:0.4s">
+          <a data-perch="1" data-bird href="#pricing" class="w-full sm:w-auto px-8 py-4 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold text-base hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.45)]">
+            See Pricing
           </a>
-          <a data-perch="1" href="#speed" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/90 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-semibold text-base hover:bg-white dark:hover:bg-white/10 transition-colors backdrop-blur-sm">
-            Compare Load Speeds
+          <a data-perch="1" data-bird href="#approach" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/90 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-semibold text-base hover:bg-white dark:hover:bg-white/10 transition-colors backdrop-blur-sm">
+            How We Build
           </a>
         </div>
 
-        <!-- Primary landing surface: feathers pile up on this card -->
-        <div id="feather-landing-zone" data-perch="5" data-occlude class="rise mt-20 md:mt-24 max-w-4xl mx-auto rounded-2xl bg-white/90 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200/90 dark:border-white/10 ring-1 ring-inset ring-white/60 dark:ring-white/5 p-6 sm:p-10 shadow-xl dark:shadow-2xl relative transition-colors duration-300" style="--d:0.55s">
+        <div id="feather-landing-zone" data-perch="5" data-occlude data-bird class="rise mt-20 md:mt-24 max-w-4xl mx-auto rounded-2xl bg-white/90 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200/90 dark:border-white/10 ring-1 ring-inset ring-white/60 dark:ring-white/5 p-6 sm:p-10 shadow-xl dark:shadow-2xl relative transition-colors duration-300" style="--d:0.55s">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div data-perch="1" class="p-5 rounded-xl bg-zinc-50/90 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/5">
               <div class="text-xs font-semibold tracking-wide text-zinc-500">Google PageSpeed</div>
@@ -135,11 +154,199 @@ import '../styles/global.css';
             Watch the forest. A bird glides in to perch, and now and then a feather drifts down onto the page. Move your cursor through the pile.
           </p>
         </div>
-
       </section>
+
+      <!-- APPROACH -->
+      <section id="approach" class="max-w-6xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+        <div data-perch="2" class="rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md p-8 sm:p-12 md:p-16">
+          <div class="grid md:grid-cols-12 gap-10 md:gap-16">
+            <h2 class="md:col-span-5 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
+              Built by hand, so it can be fast and still be yours.
+            </h2>
+            <div class="md:col-span-7 space-y-6 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[62ch]">
+              <p>
+                Every FeatherBuilds site is designed and coded from scratch. No templates, no page builders, no plugin pile-up. We build with Astro, which pre-builds each page into lean HTML and ships JavaScript only where it genuinely improves the experience, so your site opens almost instantly and stays that way.
+              </p>
+              <p>
+                Speed shouldn’t lock you out of your own website. Every site comes with a simple editor built around your content. Change a headline, post an event, swap a photo, then publish. The live site refreshes within minutes, with no developer in the loop and no risk of breaking the design.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+       <!-- VALUE -->
+      <section id="value" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl">
+          Fast to load, simple to edit, easy to find.
+        </h2>
+
+        <div class="mt-14 grid lg:grid-cols-3 gap-6">
+
+          <!-- SPEED -->
+          <article id="speed" tabindex="0" data-perch="2" class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
+            <div class="fx fx-speed" aria-hidden="true">
+              <i class="streak" style="--t:12%;--w:120px;--dl:0s;--s:1s"></i>
+              <i class="streak" style="--t:24%;--w:80px;--dl:.35s;--s:.8s"></i>
+              <i class="streak" style="--t:38%;--w:150px;--dl:.15s;--s:1.2s"></i>
+              <i class="streak" style="--t:52%;--w:90px;--dl:.6s;--s:.9s"></i>
+              <i class="streak" style="--t:64%;--w:130px;--dl:.25s;--s:1.1s"></i>
+              <i class="streak" style="--t:76%;--w:70px;--dl:.5s;--s:.75s"></i>
+              <i class="streak" style="--t:88%;--w:110px;--dl:.1s;--s:1s"></i>
+            </div>
+            <div class="relative z-10">
+              <h3 class="font-display text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Speed</h3>
+              <p class="mt-2 text-lg font-semibold text-emerald-700 dark:text-emerald-300">Fast before anyone notices.</p>
+              <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[40ch]">
+                Pages are built ahead of time and served from the edge, with JavaScript only where it earns its place. Slow sites lose customers before they read a word.
+              </p>
+            </div>
+            <div class="relative z-10 mt-auto pt-8">
+              <div class="dial" aria-hidden="true">
+                <svg viewBox="0 0 100 100">
+                  <circle class="dial-track" cx="50" cy="50" r="44" fill="none" stroke-width="8"/>
+                  <circle class="dial-ring" cx="50" cy="50" r="44" fill="none" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+                <div class="dial-num"></div>
+              </div>
+              <div class="dial-cap mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+                <span class="cap-slow">A typical website</span>
+                <span class="cap-fast font-semibold text-emerald-700 dark:text-emerald-300">A FeatherBuilds site</span>
+              </div>
+            </div>
+            <div class="peek-wrap" style="right:2.5rem"><Fragment set:html={bird} /></div>
+          </article>
+
+          <!-- EDITABILITY -->
+          <article id="editing" tabindex="0" data-perch="2" class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
+            <div class="fx fx-ed" aria-hidden="true"></div>
+            <div class="relative z-10">
+              <h3 class="font-display text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Editability</h3>
+              <p class="mt-2 text-lg font-semibold text-emerald-700 dark:text-emerald-300">Yours to update, any time.</p>
+              <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[40ch]">
+                Change a headline, post an event or swap a photo in a simple editor, then publish. Your site updates within minutes and the design stays exactly as built.
+              </p>
+            </div>
+            <div class="relative z-10 mt-auto pt-8">
+              <div class="ed relative rounded-2xl border border-zinc-200/80 dark:border-white/10 bg-zinc-50/90 dark:bg-zinc-950/50 p-4 text-sm" aria-hidden="true">
+                <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                  <span>New event</span>
+                  <span class="ed-btn rounded-full bg-emerald-500 px-3 py-1 font-semibold text-zinc-950">Publish</span>
+                </div>
+                <div class="mt-3 text-xs text-zinc-500 dark:text-zinc-400">Title</div>
+                <div class="ed-field text-zinc-900 dark:text-zinc-100">Summer Tasting Night</div>
+                <div class="mt-2 text-xs text-zinc-500 dark:text-zinc-400">Time</div>
+                <div class="ed-field text-zinc-900 dark:text-zinc-100">
+                  <span class="ed-old">6:00 PM</span>
+                  <span class="ed-new">7:30 PM<span class="caret"></span></span>
+                </div>
+                <div class="ed-toast mt-3 flex items-center gap-2 rounded-lg bg-emerald-500/15 px-3 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  Event published
+                </div>
+                <svg class="ed-cursor" viewBox="0 0 24 24" width="20" height="20"><path d="M5 3l14 7-6 2-2 6z" fill="#fff" stroke="#04271e" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="peek-wrap" style="left:50%;margin-left:-2.25rem"><Fragment set:html={bird} /></div>
+          </article>
+
+          <!-- SEO -->
+          <article id="seo" tabindex="0" data-perch="2" class="vcard group relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md p-8 pb-20 min-h-[38rem] flex flex-col transition-colors duration-300 hover:border-emerald-500/40 scroll-mt-28">
+            <div class="fx fx-seo" aria-hidden="true">
+              <i class="ring" style="--dl:0s"></i><i class="ring" style="--dl:.8s"></i><i class="ring" style="--dl:1.6s"></i>
+            </div>
+            <div class="relative z-10">
+              <h3 class="font-display text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white">SEO &amp; AI search</h3>
+              <p class="mt-2 text-lg font-semibold text-emerald-700 dark:text-emerald-300">Found by people and by AI.</p>
+              <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[40ch]">
+                Clean markup, structured data and fast Core Web Vitals help you rank in Google and get recommended when people ask AI assistants who to call.
+              </p>
+            </div>
+            <div class="relative z-10 mt-auto pt-8" aria-hidden="true">
+              <div class="relative h-[11rem]">
+                <div class="serp-row border border-zinc-200/80 dark:border-white/10 bg-zinc-50/90 dark:bg-zinc-950/50" style="--y0:0rem;--y1:3.8rem">
+                  <div class="h-2 w-24 rounded bg-zinc-300/70 dark:bg-white/15"></div><div class="mt-2 h-2 w-40 rounded bg-zinc-300/50 dark:bg-white/10"></div>
+                </div>
+                <div class="serp-row border border-zinc-200/80 dark:border-white/10 bg-zinc-50/90 dark:bg-zinc-950/50" style="--y0:3.8rem;--y1:7.6rem">
+                  <div class="h-2 w-28 rounded bg-zinc-300/70 dark:bg-white/15"></div><div class="mt-2 h-2 w-36 rounded bg-zinc-300/50 dark:bg-white/10"></div>
+                </div>
+                <div class="serp-row serp-us border border-zinc-200/80 dark:border-white/10 bg-zinc-50/90 dark:bg-zinc-950/50" style="--y0:7.6rem;--y1:0rem">
+                  <div class="text-[11px] text-zinc-500 dark:text-zinc-400">hartwellplumbing.com</div>
+                  <div class="text-sm font-semibold text-sky-700 dark:text-sky-300">Hartwell Plumbing | Same-Day Repairs</div>
+                  <span class="rank text-xs font-bold">
+                    <span class="r-from text-zinc-500">#3</span>
+                    <span class="r-to rounded-full bg-emerald-500 px-2 py-0.5 text-zinc-950">#1</span>
+                  </span>
+                </div>
+              </div>
+              <div class="ai-pill mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                <svg class="w-3.5 h-3.5 spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.3L20.5 10l-6.3 1.7L12 18l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>
+                Recommended in AI answers
+              </div>
+            </div>
+            <div class="peek-wrap" style="right:2.5rem"><Fragment set:html={bird} /></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section id="pricing" class="max-w-6xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl">
+          One plan. Everything included.
+        </h2>
+
+        <div data-perch="3" class="mt-12 rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md grid lg:grid-cols-12 overflow-hidden">
+          <div class="lg:col-span-5 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-zinc-200/80 dark:border-white/10 bg-emerald-500/[0.06]">
+            <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Starting at</p>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="font-display text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white">$200</span>
+              <span class="text-lg text-zinc-600 dark:text-zinc-400">/ month</span>
+            </div>
+            <!-- TODO: add your build fee amount here if you want to state it -->
+            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">plus a small one-time build fee</p>
+            <p class="mt-8 text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
+              Covers a standard five-page small business website. Larger projects are quoted by scope: extra pages, custom features and time involved. 12-month minimum.
+            </p>
+            <a href="#contact" class="mt-8 inline-flex px-7 py-3.5 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold text-base hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors">
+              Start a Build
+            </a>
+          </div>
+
+          <ul class="lg:col-span-7 p-8 md:p-12 grid sm:grid-cols-2 gap-x-10 gap-y-8">
+            {included.map((i) => (
+              <li class="flex gap-3">
+                <svg class="w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                <div>
+                  <div class="font-semibold text-zinc-950 dark:text-white">{i.t}</div>
+                  <p class="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{i.d}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="max-w-6xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
+        <div data-perch="2" class="rounded-3xl border border-emerald-500/25 bg-emerald-500/[0.08] backdrop-blur-md p-10 md:p-16 text-center">
+          <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl mx-auto">
+            Tell us about your business.
+          </h2>
+          <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300 max-w-xl mx-auto">Send a few lines about what you do and what you need. You will hear back from the person who builds your site.</p>
+          <!-- TODO: replace with your real email -->
+          <a href="mailto:hello@example.com" class="mt-8 inline-flex px-8 py-4 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
+            Email us
+          </a>
+        </div>
+      </section>
+
     </main>
 
-    <!-- Front layer: feathers draw above the content so they can land on it -->
+    <footer class="relative z-10 border-t border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md">
+      <div class="max-w-6xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
+    </footer>
+
     <canvas id="feather-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-40" aria-hidden="true"></canvas>
 
     <script src="/feathers.js" defer></script>

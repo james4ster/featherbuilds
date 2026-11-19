@@ -47,6 +47,26 @@
       c.width = Math.ceil(w); c.height = Math.ceil(h);
       return c;
     }
+    function pickPerchEl() {
+  const cands = birdEls.filter((el) => {
+    const r = perchRect(el);
+    return r.width > 40 && r.top > headerBottom + 70 && r.top < H - 120 && r.right < W;
+  });
+  if (!cands.length) return null;
+  const el = cands[Math.floor(Math.random() * cands.length)];
+  const fx = el.dataset.bird === 'text' ? (Math.random() < 0.5 ? rand(0.1, 0.3) : rand(0.7, 0.9)) : rand(0.2, 0.8);
+  return { el: el, fx: fx };
+}
+function perchRect(el) {
+  if (el.dataset.bird !== 'text') return el.getBoundingClientRect();
+  const rg = document.createRange(); rg.selectNodeContents(el);
+  const rs = Array.from(rg.getClientRects()).filter((r) => r.width > 8);
+  if (!rs.length) return el.getBoundingClientRect();
+  const top = Math.min(...rs.map((r) => r.top));
+  const line = rs.filter((r) => r.top < top + 6);
+  const left = Math.min(...line.map((r) => r.left)), right = Math.max(...line.map((r) => r.right));
+  return { left: left, right: right, top: top + 8, width: right - left };
+}
 
     /* ---------- state ---------- */
     let W = 0, H = 0, DPR = 1;
@@ -63,6 +83,7 @@
     const header = document.getElementById('site-header');
     const perchEls = Array.from(document.querySelectorAll('[data-perch]'));
     const occEls = Array.from(document.querySelectorAll('[data-occlude]'));
+    const birdEls = Array.from(document.querySelectorAll('[data-bird]'));
     const weights = new Map();
     perchEls.forEach((el) => weights.set(el, parseFloat(el.dataset.perch) || 1));
     const clusters = new WeakMap();
@@ -175,7 +196,7 @@
 
     // Layered conifer silhouette: drooping tiers, jagged bough edges, tapered trunk
     function pine(c, x, base, h, w, lean, rng) {
-      const tiers = Math.max(6, Math.round(h / 19));
+      const tiers = Math.max(6, Math.round(h / (15 + rng() * 9)));
       const apexY = base - h;
       const canopyH = h * 0.93;
       const tierH = canopyH / tiers;
@@ -243,10 +264,12 @@
 
         const n = Math.ceil(W / def.gap) + 2;
         for (let i = -1; i < n; i++) {
-          const x = i * def.gap + (rng() - 0.5) * def.gap * 0.8;
-          const h = lerp(def.h[0], def.h[1], rng()) * s;
-          const w = h * (def.w + rng() * 0.1);
-          const lean = (rng() - 0.5) * 5;
+        if (rng() < 0.12) continue;                                   // occasional clearing
+        const x = i * def.gap + (rng() - 0.5) * def.gap * 1.4;        // looser spacing
+        const hr = Math.pow(rng(), 1.6);                              // many small, few tall
+        const h = lerp(def.h[0], def.h[1], hr) * s * (rng() < 0.07 ? 1.3 : 1);  // rare emergent giants
+        const w = h * def.w * (0.75 + rng() * 0.5);                   // narrow spruce vs. wide fir
+        const lean = (rng() - 0.5) * 7;
           const y = base + (rng() - 0.5) * 14 * s;
           pine(c, x, y, h, w, lean, rng);
           if (def.perch && x > 80 && x < W - 80) peaks.push({ x: x + lean, y: y - h, layer: li });
@@ -254,11 +277,16 @@
       });
 
       fireflies = [];
-      if (dark) {
-        for (let i = 0; i < 24; i++) {
-          fireflies.push({ x: rand(0, W), y: rand(H * 0.6, H * 0.97), vx: rand(-8, 8), vy: rand(-5, 5), ph: rand(0, TAU), r: rand(10, 18) });
-        }
-      }
+if (dark) {
+  const count = W < 700 ? 6 : 11;
+  for (let i = 0; i < count; i++) {
+    fireflies.push({
+      x: rand(0, W), y: rand(H * 0.68, H * 0.96),
+      vx: rand(-5, 5), vy: rand(-3, 3),
+      ph: rand(0, TAU), r: rand(6, 10), rate: rand(0.5, 0.9)
+    });
+  }
+}
       clouds = [];
       for (let i = 0; i < 5; i++) clouds.push({ x: rand(-200, W), y: H * rand(0.05, 0.3), sc: rand(0.7, 1.5), v: rand(5, 12) });
       if (!keepBird) bird = null;
@@ -270,10 +298,10 @@
     function buildFireflySprite() {
       const c = makeCanvas(48, 48), g = c.getContext('2d');
       const gr = g.createRadialGradient(24, 24, 0, 24, 24, 24);
-      gr.addColorStop(0, 'rgba(255,255,220,1)');
-      gr.addColorStop(0.18, 'rgba(190,255,200,0.85)');
-      gr.addColorStop(0.5, 'rgba(52,211,153,0.28)');
-      gr.addColorStop(1, 'rgba(52,211,153,0)');
+      gr.addColorStop(0, 'rgba(255,255,230,1)');
+gr.addColorStop(0.15, 'rgba(235,255,170,0.9)');
+gr.addColorStop(0.4, 'rgba(190,240,120,0.25)');
+gr.addColorStop(1, 'rgba(190,240,120,0)');
       g.fillStyle = gr; g.fillRect(0, 0, 48, 48);
       return c;
     }
@@ -386,6 +414,15 @@
         bird.dropAt = rand(0.35, 0.65);
         return;
       }
+      const tgt = Math.random() < 0.3 ? pickPerchEl() : null;
+if (tgt) {
+  const r = perchRect(tgt.el), s1 = tgt.el.dataset.bird === 'text' ? 0.6 : 0.65;
+  const tx = r.left + tgt.fx * r.width, ty = r.top - 19.5 * s1;
+  bird = newBird(x0, y0, 0.9);
+  bird.mode = 'arrive'; bird.perchEl = tgt.el; bird.perchFx = tgt.fx; bird.onEl = true;
+  bird.path = makePath(x0, y0, tx, ty, 0.9, s1, clamp(Math.hypot(tx - x0, ty - y0) / 210, 2.8, 6), rand(50, 120), 'out');
+  return;
+}
       const pk = pickPeak(null);
       const s1 = PERCH_S[pk.layer];
       const ty = pk.y - 17 * s1;
@@ -394,20 +431,23 @@
       bird.path = makePath(x0, y0, pk.x, ty, 0.9, s1, clamp(Math.hypot(pk.x - x0, ty - y0) / 210, 2.8, 6), rand(50, 120), 'out');
     }
     function depart() {
-      const b = bird;
-      if (Math.random() < 0.35 && peaks.length > 2) {
-        const pk = pickPeak(b.peak);
-        const s1 = PERCH_S[pk.layer];
-        const ty = pk.y - 17 * s1;
-        b.mode = 'hop'; b.peak = pk;
-        b.path = makePath(b.x, b.y, pk.x, ty, b.s, s1, clamp(Math.hypot(pk.x - b.x, ty - b.y) / 180, 1.6, 4), rand(30, 80), 'io');
-      } else {
-        const dir = Math.random() > 0.5 ? 1 : -1;
-        const x1 = dir > 0 ? W + 100 : -100, y1 = -60 + Math.random() * H * 0.25;
-        b.mode = 'depart';
-        b.path = makePath(b.x, b.y, x1, y1, b.s, 0.95, rand(3.2, 4.4), rand(40, 100), 'in');
-      }
-    }
+  const b = bird;
+  if (Math.random() < 0.8) {
+    releaseFeather(b.x - b.facing * 4 * b.s, b.y + 6 * b.s, clamp(0.18 + (b.s - 0.3) * 0.5, 0.18, 0.5));
+  }
+  if (Math.random() < 0.35 && peaks.length > 2) {
+    const pk = pickPeak(b.peak);
+    const s1 = PERCH_S[pk.layer];
+    const ty = pk.y - 17 * s1;
+    b.mode = 'hop'; b.peak = pk; b.perchEl = null;
+    b.path = makePath(b.x, b.y, pk.x, ty, b.s, s1, clamp(Math.hypot(pk.x - b.x, ty - b.y) / 180, 1.6, 4), rand(30, 80), 'io');
+  } else {
+    const dir = Math.random() > 0.5 ? 1 : -1;
+    const x1 = dir > 0 ? W + 100 : -100, y1 = -60 + Math.random() * H * 0.25;
+    b.mode = 'depart';
+    b.path = makePath(b.x, b.y, x1, y1, b.s, 0.95, rand(3.2, 4.4), rand(40, 100), 'in');
+  }
+}
     function updateBird(dt) {
       const b = bird;
       if (b.mode === 'perch') {
@@ -417,13 +457,17 @@
         if (b.blink > 0) b.blink -= dt;
         if (b.chirp > 0) b.chirp -= dt;
         if (!b.turned && b.timer > b.turnAt) { b.turned = true; b.facing *= -1; }
-        if (!b.dropped && b.timer > b.dropAt) {
-          b.dropped = true; b.chirp = 0.4;
-          if (Math.random() < 0.8) releaseFeather(b.x, b.y + 8 * b.s, clamp(0.18 + (b.s - 0.3) * 0.5, 0.18, 0.5));
+        if (!b.dropped && b.timer > b.dropAt) { b.dropped = true; b.chirp = 0.4; } // chirp only, no feather
+
+        if (b.perchEl) {                      // stay glued to the element while scrolling
+            const r = perchRect(b.perchEl);
+            if (r.top < headerBottom + 20 || r.top > H - 40) { depart(); return; }
+            b.x = r.left + b.perchFx * r.width;
+            b.y = r.top - 19.5 * b.s;
         }
         if (b.timer > b.dur) depart();
         return;
-      }
+        }
       const p = b.path;
       p.t += dt / p.dur;
       const t = clamp(p.t, 0, 1);
@@ -441,13 +485,11 @@
       b.phase += dt * (landing ? 27 : b.mode === 'depart' ? 22 : 17);
       b.y += Math.sin(b.phase * 0.5) * 1.2 * b.s;
 
-      if (b.mode === 'flyby' && !b.dropped && t > b.dropAt) {
-        b.dropped = true;
-        releaseFeather(b.x, b.y + 10 * b.s, 0.4);
-      }
+      
       if (p.t >= 1) {
         if (b.mode === 'arrive' || b.mode === 'hop') {
           b.mode = 'perch'; b.x = p.x1; b.y = p.y1; b.s = p.s1; b.tilt = 0;
+          b.onEl = !!b.perchEl;
           b.timer = 0; b.dur = rand(4, 7.5); b.phase = 0;
           b.dropAt = rand(1.2, 2.8); b.dropped = false; b.turnAt = rand(0.8, 3); b.turned = false;
         } else {
@@ -587,29 +629,31 @@
       return assignSlot(vis[0]);
     }
     function releaseFeather(x, y, d0) {
-      const slot = pickSlot();
-      const f = {
-        x: x, y: y, x0: x, y0: y, depth: d0, d0: d0, t: 0, T: rand(6.5, 9.5),
-        state: 'drift', slot: slot, sprite: Math.floor(Math.random() * 3),
-        phase: rand(0, TAU), freq: rand(1.7, 2.5), amp: rand(26, 44), arc: rand(70, 150),
-        drift: rand(-50, 50), flip: Math.random() < 0.5 ? -1 : 1,
-        restAngle: (Math.random() - 0.5) * 0.7, angle: 0, tilt: 1, alpha: 1, landedAt: 0,
-        tx: x + rand(-200, 200), ty: H + 80
-      };
-      f.flipAng = f.flip * 0.25;
-      feathers.push(f);
-      const live = feathers.filter((e) => e.state !== 'fade');
-      if (live.length > MAX_FEATHERS) {
-        const oldest = live.filter((e) => e.state === 'rest').sort((a, b) => a.landedAt - b.landedAt)[0];
-        if (oldest) oldest.state = 'fade';
-      }
-    }
+  const slot = Math.random() < 0.65 ? pickSlot() : null;
+  const f = {
+    x: x, y: y, x0: x, y0: y, depth: d0, d0: d0, t: 0, T: slot ? rand(6.5, 9.5) : rand(8, 12),
+    state: 'drift', slot: slot, sprite: Math.floor(Math.random() * 3),
+    phase: rand(0, TAU), freq: rand(1.7, 2.5), amp: rand(26, 44),
+    arc: slot ? rand(70, 150) : rand(8, 30),
+    drift: rand(-50, 50), flip: Math.random() < 0.5 ? -1 : 1,
+    restAngle: (Math.random() - 0.5) * 0.7, angle: 0, tilt: 1, alpha: 1, landedAt: 0,
+    tx: x < W / 2 ? -90 : W + 90, ty: y + rand(H * 0.3, H * 0.6)
+  };
+  f.flipAng = f.flip * 0.25;
+  feathers.push(f);
+  const live = feathers.filter((e) => e.state !== 'fade');
+  if (live.length > MAX_FEATHERS) {
+    const oldest = live.filter((e) => e.state === 'rest').sort((a, b) => a.landedAt - b.landedAt)[0];
+    if (oldest) oldest.state = 'fade';
+  }
+}
     function blow(f) {
       f.state = 'drift'; f.x0 = f.x; f.y0 = f.y; f.t = 0; f.T = rand(2.4, 3.6);
       f.d0 = 1; f.depth = 1; f.arc = rand(50, 90); f.amp = rand(16, 26);
       f.phase = rand(0, TAU); f.drift = rand(-60, 60);
-      f.slot = pickSlot();
-      f.tx = f.x + rand(-200, 200); f.ty = H + 80;
+      f.slot = Math.random() < 0.5 ? pickSlot() : null;
+        if (!f.slot) f.arc = rand(8, 30);
+      f.tx = f.x < W / 2 ? -90 : W + 90; f.ty = f.y + rand(H * 0.2, H * 0.5);
     }
     function updateFeathers(dt) {
       const mouseLive = performance.now() - mouse.t < 90;
@@ -687,7 +731,7 @@
           ff.x += (ff.vx + Math.sin(clock * 0.6 + ff.ph) * 9) * dt;
           ff.y += (ff.vy + Math.cos(clock * 0.5 + ff.ph * 1.3) * 7) * dt;
           if (ff.x < -20) ff.x = W + 20; else if (ff.x > W + 20) ff.x = -20;
-          if (ff.y < H * 0.6) ff.vy = Math.abs(ff.vy); else if (ff.y > H * 0.98) ff.vy = -Math.abs(ff.vy);
+          if (ff.y < H * 0.66) ff.vy = Math.abs(ff.vy); else if (ff.y > H * 0.98) ff.vy = -Math.abs(ff.vy);
         });
         if (!shoot && clock > nextShootAt) {
           const dir = Math.random() > 0.5 ? 1 : -1, sp = rand(620, 820);
@@ -734,22 +778,26 @@
       bg.drawImage(frontCache, 0, 0, W, H);
 
       if (dark && fireflySprite) {
-        fireflies.forEach((ff) => {
-          const a = 0.12 + 0.88 * Math.pow(0.5 + 0.5 * Math.sin(clock * 1.3 + ff.ph * 2), 2);
-          bg.globalAlpha = a;
-          bg.drawImage(fireflySprite, ff.x - ff.r, ff.y - ff.r, ff.r * 2, ff.r * 2);
-        });
-        bg.globalAlpha = 1;
-      }
-      if (bird && !behind) drawBird(bg, bird, dark);
+  fireflies.forEach((ff) => {
+    const k = Math.max(0, Math.sin(clock * ff.rate + ff.ph * 2));
+    const a = Math.pow(k, 3) * 0.95;
+    if (a < 0.02) return;
+    bg.globalAlpha = a;
+    bg.drawImage(fireflySprite, ff.x - ff.r, ff.y - ff.r, ff.r * 2, ff.r * 2);
+  });
+  bg.globalAlpha = 1;
+}
+      
     }
 
     function renderFg(dark) {
       fg.setTransform(DPR, 0, 0, DPR, 0, 0);
       fg.clearRect(0, 0, W, H);
+      if (bird && !behind && !bird.onEl) drawBird(bg, bird, dark);
       for (let i = 0; i < feathers.length; i++) drawFeather(feathers[i], dark);
     }
 
+    if (bird && bird.onEl) drawBird(fg, bird, dark);
     /* ---------- loop ---------- */
     let raf = 0, last = 0, running = false;
     function frame(ts) {
