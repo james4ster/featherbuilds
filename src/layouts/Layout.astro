@@ -1,0 +1,115 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, image = '/og-image.png', jsonLd } = Astro.props;
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL(Astro.url.pathname, origin).href;
+const ogImage = new URL(image, origin).href;
+---
+<!doctype html>
+<html lang="en" class="dark scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#05070a" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FeatherBuilds" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="FeatherBuilds: hand-coded, feather-light websites" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body class="bg-linear-to-b from-sky-100 via-emerald-50/60 to-emerald-100/40 text-zinc-900 dark:from-[#05070a] dark:via-[#08100f] dark:to-[#06130f] dark:text-zinc-100 antialiased overflow-x-hidden transition-colors duration-500 min-h-screen">
+
+    <canvas id="forest-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-0" aria-hidden="true"></canvas>
+
+    <header id="site-header" class="sticky top-0 z-30 border-b border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 font-display font-extrabold text-xl tracking-tight text-zinc-950 dark:text-white">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+              <line x1="16" y1="8" x2="2" y2="22"></line>
+              <line x1="17.5" y1="15" x2="9" y2="15"></line>
+            </svg>
+          </span>
+          FeatherBuilds
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400" aria-label="Primary">
+          <a href="/#value" class="hover:text-zinc-950 dark:hover:text-white transition-colors">What I Do</a>
+          <a href="/#process" class="hover:text-zinc-950 dark:hover:text-white transition-colors">The Process</a>
+          <a href="/#pricing" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Pricing</a>
+          <a href="/why-featherbuilds" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why Featherbuilds?</a>
+          <a href="/about" class="hover:text-zinc-950 dark:hover:text-white transition-colors">About</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="theme-switch">
+            <span class="knob"></span>
+          </button>
+          <a href="/#contact" class="px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
+            Start a Build
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10">
+      <slot />
+    </main>
+
+    <footer class="relative z-10 border-t border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
+    </footer>
+
+    <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-40" aria-hidden="true"></canvas>
+
+    <script src="/feathers.js" defer></script>
+    <script is:inline>
+      (function () {
+        if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { e.target.classList.toggle('is-active', e.isIntersecting); });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.vcard').forEach(function (c) { io.observe(c); });
+      })();
+    </script>
+  </body>
+</html>

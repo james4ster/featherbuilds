@@ -1,0 +1,534 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const tabs = ["Events", "Menu", "Hours", "Products"];
+
+// [status, text]  status: yes | part | no.  Columns: Template builders, WordPress + builder, FeatherBuilds
+const rows = [
+  [
+    "Custom design",
+    ["no", "Pick a template"],
+    ["part", "Theme plus tweaks"],
+    ["yes", "Drawn around your brand"],
+  ],
+  [
+    "Page speed",
+    ["no", "Heavy platform scripts"],
+    ["no", "Slows with each plugin"],
+    ["yes", "Pre-built, tuned by hand"],
+  ],
+  [
+    "Edit it yourself",
+    ["yes", "Yes, inside their platform"],
+    ["part", "Yes, after learning the dashboard"],
+    ["yes", "Yes, in a simple studio"],
+  ],
+  [
+    "Updates & upkeep",
+    ["yes", "Handled for you"],
+    ["no", "Plugins, backups, patches"],
+    ["yes", "Handled for you"],
+  ],
+  [
+    "Security exposure",
+    ["part", "Platform-wide"],
+    ["no", "Plugins are a common way in"],
+    ["yes", "No plugin stack to attack"],
+  ],
+  [
+    "Leaving later",
+    ["no", "Locked to the platform"],
+    ["part", "Portable, with effort"],
+    ["yes", "Full code & domain handover"],
+  ],
+];
+const plugins = [
+  "page-builder-core.css",
+  "slider-plugin.js",
+  "popup-builder.js",
+  "cookie-banner.js",
+  "chat-widget.js",
+  "analytics-pack.js",
+];
+
+const facts = [
+  [
+    "Pre-built pages",
+    "Plain HTML and CSS, built ahead of time, so visitors never wait on a server.",
+  ],
+  [
+    "JavaScript only where it helps",
+    "Motion loads only where it improves the experience.",
+  ],
+  [
+    "Nothing to hack or update",
+    "No database or plugin stack exposed, no plugin updates to chase.",
+  ],
+  [
+    "Built for search",
+    "Clean markup and fast Core Web Vitals remove a common handicap. Content and local signals still matter most.",
+  ],
+];
+
+const card =
+  "rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/80";
+const label =
+  "text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300";
+const h2 =
+  "mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white";
+---
+
+<Layout
+  title="Why FeatherBuilds: Fast, Editable, Hand-Coded Websites"
+  description="Update your hours, specials, menu and events yourself in minutes. See how a hand-coded FeatherBuilds site compares to template builders and WordPress."
+>
+  <!-- STUDIO -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 text-center">
+    <p class={label}>Why FeatherBuilds</p>
+    <h1
+      data-bird="text"
+      class="mt-3 font-display text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-4xl mx-auto leading-[1.08]"
+    >
+      A website you can actually edit.
+    </h1>
+    <p class="mt-6 text-lg md:text-xl text-zinc-700 dark:text-zinc-300 max-w-2xl mx-auto leading-relaxed">
+      Hours changed? New special? Sold out? Fix it yourself in seconds. Pick one
+      below and watch it go live.
+    </p>
+
+    <div
+      id="studio"
+      data-perch="3"
+      data-bird
+      class={`mt-12 mx-auto text-left overflow-hidden ${card}`}
+    >
+      <div
+        role="tablist"
+        class="flex gap-2 overflow-x-auto p-3 border-b border-zinc-200/80 dark:border-white/10"
+      >
+        {tabs.map((k, i) => (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={i === 0}
+            class="tab shrink-0 px-4 py-2 rounded-full text-sm font-semibold text-zinc-600 dark:text-zinc-400"
+          >
+            {k}
+          </button>
+        ))}
+      </div>
+      <div class="grid lg:grid-cols-[19rem_1fr]">
+        <form
+          id="x-form"
+          novalidate
+          class="p-6 border-b lg:border-b-0 lg:border-r border-zinc-200/80 dark:border-white/10"
+        >
+          <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+            <span>Your studio</span>
+            <span class="rounded bg-zinc-200/70 dark:bg-white/10 px-2 py-0.5">
+              Draft
+            </span>
+          </div>
+          <div id="x-fields"></div>
+          <button
+            id="x-pub"
+            type="submit"
+            class="pub ready mt-6 w-full rounded-full bg-emerald-500 px-5 py-3 font-bold text-zinc-950"
+          >
+            Publish
+          </button>
+          <p class="mt-3 text-xs text-zinc-500 dark:text-zinc-400">
+            Try it: change the text, then hit Publish.
+          </p>
+          <div
+            id="x-toast"
+            class="sx-toast mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-500/15 px-3 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-300"
+          >
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            Published. Live in minutes.
+          </div>
+        </form>
+        <div class="p-4 md:p-6 bg-zinc-50/60 dark:bg-zinc-950/40">
+          <div class="frame bg-white">
+            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-zinc-200/80 dark:border-white/10 bg-white dark:bg-zinc-900">
+              <i class="dot"></i>
+              <i class="dot"></i>
+              <i class="dot"></i>
+              <span
+                id="x-url"
+                class="ml-2 text-[11px] text-zinc-500 dark:text-zinc-400"
+              ></span>
+            </div>
+            <div id="site" class="site" data-th="wine"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mt-5 text-sm text-zinc-600 dark:text-zinc-400">
+      Also: photos, staff bios, FAQs, pricing, announcements, SEO titles. If
+      it’s on your site, you can change it.
+    </p>
+  </section>
+
+  <!-- RACE -->
+  <section class="scene max-w-7xl mx-auto px-6 pb-24 md:pb-32">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class={label}>Speed</p>
+      <h2 class={h2}>Your customers won’t wait for a plugin to load.</h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-2 gap-6">
+      <div data-perch="2" data-bird class={`frame p-0 ${card}`}>
+        <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-zinc-200/80 dark:border-white/10">
+          <i class="dot"></i>
+          <i class="dot"></i>
+          <i class="dot"></i>
+          <span class="ml-2 text-[11px] text-zinc-500">
+            typical-wordpress-site.com
+          </span>
+        </div>
+        <div class="p-6 min-h-[19rem]">
+          <div class="flex items-center gap-3">
+            <i class="spin"></i>
+            <span class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+              Loading plugins…
+            </span>
+          </div>
+          <div class="bar mt-3 h-1.5 rounded bg-zinc-300/50 dark:bg-white/10">
+            <i></i>
+          </div>
+          <ul class="mt-4 space-y-1.5 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+            {plugins.map((p, i) => (
+              <li class="pl" style={`--i:${i}`}>
+                ↳ {p}
+              </li>
+            ))}
+          </ul>
+          <p class="mt-5 font-display text-4xl font-extrabold text-orange-500">
+            <span data-to="6.2" data-ms="6200" data-d="1" data-sf="s">
+              0.0s
+            </span>
+          </p>
+          <p class="text-xs text-zinc-500">
+            Still waiting. Visitors left at 3 seconds.
+          </p>
+        </div>
+      </div>
+      <div
+        data-perch="2"
+        data-bird
+        class={`frame p-0 border-emerald-500/40 ${card}`}
+      >
+        <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-zinc-200/80 dark:border-white/10">
+          <i class="dot"></i>
+          <i class="dot"></i>
+          <i class="dot"></i>
+          <span class="ml-2 text-[11px] text-zinc-500">
+            your-featherbuilds-site.com
+          </span>
+        </div>
+        <div class="p-6 min-h-[19rem]">
+          <div class="fast-in">
+            <div class="h-3 w-1/3 rounded bg-emerald-500/60"></div>
+            <div class="mt-4 h-24 rounded-xl bg-gradient-to-br from-emerald-500/30 to-cyan-500/20"></div>
+            <div class="mt-3 grid grid-cols-3 gap-3">
+              <div class="h-12 rounded-lg bg-zinc-300/40 dark:bg-white/10"></div>
+              <div class="h-12 rounded-lg bg-zinc-300/40 dark:bg-white/10"></div>
+              <div class="h-12 rounded-lg bg-zinc-300/40 dark:bg-white/10"></div>
+            </div>
+          </div>
+          <p class="mt-5 font-display text-4xl font-extrabold text-emerald-500">
+            <span data-to="0.4" data-ms="400" data-d="1" data-sf="s">
+              0.0s
+            </span>
+          </p>
+          <p class="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">
+            Loaded. Customer is already reading.
+          </p>
+        </div>
+      </div>
+    </div>
+    <p class="mt-3 text-center text-xs text-zinc-500">
+      Illustrative. Run PageSpeed on any site to see its real numbers.
+    </p>
+
+    <ul class="mt-14 grid sm:grid-cols-2 gap-x-10 gap-y-6 max-w-4xl mx-auto">
+      {facts.map(([t, d]) => (
+        <li class="flex gap-3">
+          <svg
+            class="w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+          <div>
+            <div class="font-semibold text-zinc-950 dark:text-white">{t}</div>
+            <p class="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              {d}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- VERSUS -->
+  <section class="max-w-7xl mx-auto px-6 pb-24 md:pb-32">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class={label}>The alternatives</p>
+      <h2 class={h2}>
+        Custom, fast, or editable. Everyone else makes you pick two.
+      </h2>
+    </div>
+    <div class="mt-12 overflow-x-auto pb-2">
+      <div
+        data-perch="2"
+        data-bird
+        class={`min-w-[46rem] grid grid-cols-[1.1fr_1fr_1fr_1.15fr] overflow-hidden ${card}`}
+      >
+        <div class="p-4"></div>
+        <div class="p-4 font-display font-bold text-zinc-950 dark:text-white">
+          Template builders
+          <span class="block text-xs font-normal text-zinc-500">
+            Wix, Squarespace and similar
+          </span>
+        </div>
+        <div class="p-4 font-display font-bold text-zinc-950 dark:text-white">
+          WordPress + page builder
+          <span class="block text-xs font-normal text-zinc-500">
+            Themes and plugins
+          </span>
+        </div>
+        <div class="p-4 fbcol font-display font-extrabold text-emerald-700 dark:text-emerald-300">
+          FeatherBuilds
+          <span class="block text-xs font-normal">
+            Custom, fast and editable
+          </span>
+        </div>
+        {rows.map(([k, ...cells]) => (
+          <>
+            <div class="p-4 border-t border-zinc-200/80 dark:border-white/10 font-semibold text-sm text-zinc-950 dark:text-white">
+              {k}
+            </div>
+            {cells.map(([s, t], i) => (
+              <div
+                class={`p-4 border-t border-zinc-200/80 dark:border-white/10 flex gap-2 text-sm text-zinc-700 dark:text-zinc-300 ${i === 2 ? "fbcol" : ""}`}
+              >
+                <span class={`mk ${s}`}>
+                  {s === "yes" ? "✓" : s === "part" ? "~" : "✕"}
+                </span>
+                <span>{t}</span>
+              </div>
+            ))}
+          </>
+        ))}
+      </div>
+    </div>
+    <p class="mt-3 text-center text-xs text-zinc-500">
+      General comparison. Individual sites and plans vary.
+    </p>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 pb-24 md:pb-32">
+    <div
+      data-perch="2"
+      class="rounded-3xl border border-emerald-500/25 bg-emerald-500/[0.08] p-10 md:p-16 text-center"
+    >
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-2xl mx-auto">
+        Ready for a site that works as hard as you do?
+      </h2>
+      <a
+        href="/#contact"
+        class="mt-8 inline-flex px-8 py-4 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors"
+      >
+        Start a Build
+      </a>
+    </div>
+  </section>
+
+  <script is:inline>
+  (function () {
+    var $ = function (s) { return document.querySelector(s); };
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var st = $('#studio'), form = $('#x-form'), tabs = [].slice.call(st.querySelectorAll('.tab')), cur = 0;
+    var P = function (c) { return '<span class="' + c + '"></span>'; };
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    var price = function (p) { return /^\d/.test(p) ? '$' + p : p; };
+    var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); };
+    // f: [label, default, maxlength, input type]
+    var T = [
+      { n: 'Riverside Winery', url: 'riversidewinery.com', th: 'wine', nav: ['Wines', 'Visit', 'Events', 'Club'], btn: 'Book a tasting', t: '.ws-split',
+        f: [['Event title', 'Wine Tasting Night', 40], ['Day in November (1–30)', '22', 2, 'number'], ['Time', '7:30 PM', 12]],
+        body: function (v) {
+          var ev = [[14, 'Live Jazz', '8 PM'], [18, 'Chef’s Table', '6:30 PM']];
+          if (v) ev.push([Math.min(30, Math.max(1, parseInt(v[1], 10) || 22)), esc(v[0]), esc(v[2] || '7:30 PM'), 1]);
+          ev.sort(function (a, b) { return a[0] - b[0]; });
+          var cells = 'SMTWTFS'.split('').map(function (d) { return '<b>' + d + '</b>'; }).join('');
+          for (var i = 1; i <= 35; i++) {
+            var e = ev.filter(function (x) { return x[0] === i; })[0], hot = ev.some(function (x) { return x[0] === i && x[3]; });
+            cells += i > 30 ? '<span class="ws-c off"></span>' :
+              '<span class="ws-c' + (i === 20 ? ' now' : '') + (hot ? ' hot sx-new' : '') + '"><i>' + i + '</i>' + (e ? '<em>' + e[1] + '</em>' : '') + '</span>';
+          }
+          var up = ev.map(function (x) {
+            return '<div class="ws-ev' + (x[3] ? ' sx-new' : '') + '"><span class="ws-chip"><i>NOV</i>' + x[0] + '</span><span><b>' + x[1] + '</b><small>' + x[2] + ' · Tasting Room</small></span></div>'; }).join('');
+          return '<section class="ws-hero ws-wine"><h2>Events &amp; Tastings</h2><p>Join us in the cellar, on the terrace and among the vines.</p></section>' +
+            '<div class="ws-split"><div class="ws-calbox"><div class="ws-calhd"><span>‹</span><b>November 2026</b><span>›</span></div><div class="ws-cal">' + cells + '</div></div><aside class="ws-up"><h4>Upcoming</h4>' + up + '</aside></div>';
+        } },
+      { n: 'Harbor Table', url: 'harbortable.com', th: 'navy', nav: ['Menu', 'Reservations', 'About'], btn: 'Reserve', t: '.ws-menu',
+        f: [['Dish name', 'Mango Fish Tacos', 36], ['Price', '$14', 8], ['Short description', 'Grilled mahi, mango salsa', 60]],
+        body: function (v) {
+          var it = [['Grilled Salmon', '$22', 'Lemon butter, seasonal greens', 15], ['Harbor Burger', '$16', 'Aged cheddar, house pickles', 30], ['Fish Tacos', '$13', 'Cabbage slaw, lime crema', 45], ['Clam Chowder', '$9', 'Made fresh every morning', 200]];
+          if (v) it.unshift([esc(v[0]), esc(price(v[1])), esc(v[2] || 'New on the menu'), 38]);
+          return '<section class="ws-hero ws-navy"><h2>Dinner Menu</h2><p>Fresh from the harbor, every day.</p></section><div class="ws-pills"><span>Starters</span><span class="on">Mains</span><span>Desserts</span><span>Drinks</span></div><div class="ws-menu">' +
+            it.map(function (a, i) { var nw = v && i === 0; return '<div class="ws-dish' + (nw ? ' sx-new' : '') + '"><i class="ws-ph" style="--h:' + a[3] + '"></i><div style="flex:1"><div class="ws-row"><b>' + a[0] + (nw ? '<em>NEW</em>' : '') + '</b>' + P('ws-lead') + '<b>' + a[1] + '</b></div><p>' + a[2] + '</p></div></div>'; }).join('') + '</div>';
+        } },
+      { n: 'Northside Dental', url: 'northsidedental.com', th: 'teal', nav: ['Services', 'Team', 'Hours', 'Contact'], btn: 'Book online', t: '.ws-hours',
+        f: [['Today’s hours', '9:00 AM – 3:00 PM', 28], ['Notice (optional)', 'Closing early today', 70]],
+        alert: function (v) { return v && v[1] ? esc(v[1]) : ''; },
+        body: function (v) {
+          var r = [['Mon – Thu', '9:00 AM – 5:00 PM'], ['Friday · today', v ? esc(v[0]) : '9:00 AM – 5:00 PM'], ['Saturday', 'Closed'], ['Sunday', 'Closed']];
+          return '<section class="ws-hero ws-teal"><div><h2>Gentle dentistry for the whole family</h2><p>Cleanings, whitening and same-week emergency visits.</p><div class="ws-cta"><span>Book online</span><span>Call us</span></div></div>' +
+            '<div class="ws-hours"><div class="ws-hh"><span>Office hours</span><span class="ws-open' + (v ? ' warn' : '') + '">' + (v ? 'Updated today' : 'Open now') + '</span></div>' +
+            r.map(function (x, i) { return '<div class="ws-tr' + (i === 1 ? ' today' : '') + '"><span>' + x[0] + '</span><span>' + x[1] + '</span></div>'; }).join('') + '</div></section>' +
+            '<div class="ws-info"><div><b>Location</b>214 Maple Street, Suite 3</div><div><b>New patients</b>Welcome. No referral needed.</div><div><b>Insurance</b>Most major plans accepted.</div></div>';
+        } },
+      { n: 'Willow &amp; Wick', url: 'willowandwick.com', th: 'peach', nav: ['Shop', 'Gifts', 'Journal'], btn: 'Cart (0)', t: '.ws-pg',
+        f: [['Product name', 'Fall Harvest Candle', 32], ['Price', '$28', 8]],
+        body: function (v) {
+          var p = [['Cedar &amp; Sage', '$24', 150], ['Vanilla Bean', '$22', 40], ['Lavender Fields', '$24', 270]];
+          if (v) p.unshift([esc(v[0]), esc(price(v[1])), 22]);
+          return '<section class="ws-shop"><h2>Hand-poured candles</h2><p>Small batch, soy wax, made to order.</p><div class="ws-pg">' +
+            p.map(function (a, i) { var nw = v && i === 0; return '<div class="ws-pr' + (nw ? ' sx-new' : '') + '">' + (nw ? '<span class="ws-tag">NEW</span>' : '') + '<div class="ws-img" style="--h:' + a[2] + '"></div><b>' + a[0] + '</b><small>★★★★★ (' + (nw ? 3 : 24) + ')</small><div class="ws-buy">' + a[1] + '<span>Add to cart</span></div></div>'; }).join('') + '</div></section>';
+        } }
+    ];
+    function mount(i, v) {
+      var d = T[i], s = $('#site'), a = d.alert && d.alert(v);
+      s.setAttribute('data-th', d.th); $('#x-url').textContent = d.url;
+      s.innerHTML = (a ? '<div class="ws-alert' + (v ? ' sx-new' : '') + '">' + a + '</div>' : '') +
+        '<header class="ws-hd"><b>' + d.n + '</b><nav>' + d.nav.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</nav><span class="ws-btn">' + d.btn + '</span></header>' + d.body(v);
+    }
+    function show(i) {
+      var d = T[i], s = $('#site'); cur = i;
+      tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === i); });
+      $('#x-toast').classList.remove('on'); $('#x-pub').classList.add('ready');
+      $('#x-fields').innerHTML = d.f.map(function (f, k) {
+        return '<label for="x-i' + k + '" class="mt-4 block text-xs text-zinc-500 dark:text-zinc-400">' + f[0] + '</label><input id="x-i' + k + '" type="' + (f[3] || 'text') + '"' + (f[3] === 'number' ? ' min="1" max="30"' : ' maxlength="' + f[2] + '"') + ' value="' + esc(f[1]) + '" autocomplete="off" class="mt-1 w-full h-11 px-3 rounded-lg border border-zinc-300/60 dark:border-white/10 bg-white/80 dark:bg-zinc-950/50 text-zinc-900 dark:text-zinc-100 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30">';
+      }).join('');
+      mount(i, null); s.classList.remove('swap'); void s.offsetWidth; s.classList.add('swap');
+    }
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var ins = [].slice.call(form.querySelectorAll('input')), v = ins.map(function (x) { return x.value.trim(); });
+      if (!v[0]) { ins[0].focus(); return; }
+      var p = $('#x-pub'), d = T[cur];
+      p.classList.add('press'); await sleep(250); p.classList.remove('press', 'ready'); await sleep(350);
+      mount(cur, v); var t = $('#site').querySelector(d.t); if (t) t.classList.add('fresh');
+      $('#x-toast').classList.add('on');
+    });
+    tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i); }); });
+    mount(0, null);
+    function count(el) {
+      var to = +el.dataset.to, ms = +el.dataset.ms, d = +(el.dataset.d || 0), sf = el.dataset.sf || '', t0 = performance.now();
+      if (reduce) { el.textContent = to.toFixed(d) + sf; return; }
+      (function f(n) { var q = Math.min((n - t0) / ms, 1); el.textContent = (to * q).toFixed(d) + sf; if (q < 1) requestAnimationFrame(f); })(t0);
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        if (e.target.id === 'studio') show(0);
+        else { e.target.classList.add('go'); [].forEach.call(e.target.querySelectorAll('[data-to]'), count); }
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.35 });
+    io.observe(st);
+    [].forEach.call(document.querySelectorAll('.scene'), function (s) { io.observe(s); });
+  })();
+</script>
+</Layout>
+
+<style>
+  .tab[aria-selected="true"] {
+    background: rgba(16, 185, 129, 0.18);
+    color: #047857;
+    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.4);
+  }
+  :global(.dark) .tab[aria-selected="true"] {
+    color: #6ee7b7;
+  }
+  .frame {
+    border-radius: 1rem;
+    border: 1px solid rgba(161, 161, 170, 0.3);
+    overflow: hidden;
+  }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(113, 113, 122, 0.4);
+  }
+
+  /* studio */
+
+  /* race */
+  .pl {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  .go .pl {
+    animation: pop 0.4s calc(var(--i) * 0.9s + 0.3s) forwards;
+  }
+  .spin {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(113, 113, 122, 0.3);
+    border-top-color: #f97316;
+    border-radius: 50%;
+  }
+  .go .spin {
+    animation: spin 0.8s linear infinite;
+  }
+  .pub.ready { animation: pubready 1.4s ease-in-out infinite; }
+@keyframes pubready { 50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.3); } }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .bar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 4px;
+    background: #f97316;
+  }
+  .go .bar i {
+    animation: crawl 7s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes crawl {
+    to {
+      width: 91%;
+    }
+  }
+  .fast-in {
+    opacity: 0;
+  }
+  .go .fast-in {
+    animation: pop 0.35s 0.35s forwards;
+  }
+</style>

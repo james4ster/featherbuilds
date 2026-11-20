@@ -1,0 +1,259 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const owner = "James";
+
+const card =
+    "rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/80";
+const label =
+    "text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300";
+---
+
+<Layout
+    title="About FeatherBuilds: Solo Web Studio Building Custom Sites by Hand"
+    description="Meet the solo developer behind FeatherBuilds. Custom hand-coded websites built for speed, reliability, and direct owner support."
+>
+    <!-- INTRO & PHILOSOPHY -->
+    <section class="max-w-7xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28">
+        <div class="text-center">
+            <p class={label}>About</p>
+            <h1
+                data-bird="text"
+                class="mt-3 font-display text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-4xl mx-auto leading-[1.08]"
+            >
+                One person builds, hosts and looks after your site.
+            </h1>
+        </div>
+
+        <div class="mt-14 grid md:grid-cols-[22rem_1fr] gap-10 md:gap-14 items-center max-w-5xl mx-auto">
+            <!-- Lighthouse Proof Card -->
+<div
+  id="lighthouse-card"
+  data-perch="2"
+  data-bird
+  class={`w-full p-6 sm:p-7 flex flex-col justify-between gap-7 relative overflow-hidden ${card}`}
+>
+  <div class="flex items-center justify-between text-xs font-mono text-zinc-500 dark:text-zinc-400">
+    <span>LIGHTHOUSE AUDIT</span>
+    <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      LIVE
+    </span>
+  </div>
+
+  <div class="my-auto space-y-5">
+    {['Performance', 'Accessibility', 'Best Practices', 'SEO'].map((metric, idx) => (
+      <div class="lh-row" data-index={idx}>
+        <div class="flex justify-between items-baseline text-sm font-semibold text-zinc-900 dark:text-white mb-1.5">
+          <span>{metric}</span>
+          <span class="lh-score font-mono text-base font-bold text-rose-500 transition-colors duration-200">
+            0
+          </span>
+        </div>
+        <div class="h-2.5 w-full rounded-full bg-zinc-200/90 dark:bg-zinc-800 p-0.5 overflow-visible">
+          <div
+            class="lh-bar h-full rounded-full bg-rose-500 transition-colors duration-200"
+            style="width: 0%;"
+          ></div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="pt-4 border-t border-zinc-200/80 dark:border-white/10 flex items-center justify-between text-xs font-mono text-zinc-500 dark:text-zinc-400">
+    <span>0 plugins · 0 page builders</span>
+    <span class="lh-badge opacity-0 translate-y-1 transition-all duration-500 text-emerald-600 dark:text-emerald-400 font-semibold">
+      400 / 400
+    </span>
+  </div>
+</div>
+
+<style>
+  @keyframes scorePulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.75);
+    }
+    50% {
+      box-shadow: 0 0 16px 4px rgba(16, 185, 129, 0.55);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+  }
+
+  @keyframes numberPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.25);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .lh-row.is-complete .lh-bar {
+    animation: scorePulse 0.8s ease-out forwards;
+  }
+
+  .lh-row.is-complete .lh-score {
+    display: inline-block;
+    animation: numberPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+</style>
+
+<script>
+  function initLighthouseCard() {
+    const card = document.getElementById('lighthouse-card');
+    if (!card || card.dataset.animated === 'true') return;
+
+    const rows = card.querySelectorAll('.lh-row');
+    const badge = card.querySelector('.lh-badge');
+
+    const updateThresholdColors = (bar, scoreEl, value) => {
+      if (value < 50) {
+        // 0-49: Lighthouse Red
+        bar.style.backgroundColor = '#f43f5e'; // rose-500
+        scoreEl.style.color = '#f43f5e';
+      } else if (value < 90) {
+        // 50-89: Lighthouse Orange/Amber
+        bar.style.backgroundColor = '#f59e0b'; // amber-500
+        scoreEl.style.color = '#f59e0b';
+      } else {
+        // 90-100: Lighthouse Emerald Green
+        bar.style.backgroundColor = '#10b981'; // emerald-500
+        scoreEl.style.color = '#10b981';
+      }
+    };
+
+    const animateRow = (row, delay) => {
+      const bar = row.querySelector('.lh-bar');
+      const scoreEl = row.querySelector('.lh-score');
+      const duration = 1100; // slightly longer so you clearly see Red -> Orange -> Green
+
+      setTimeout(() => {
+        const start = performance.now();
+
+        const tick = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          // Smooth ease-out curve
+          const eased = 1 - Math.pow(1 - progress, 2.6);
+          const currentVal = Math.round(eased * 100);
+
+          bar.style.width = `${eased * 100}%`;
+          scoreEl.textContent = currentVal;
+          updateThresholdColors(bar, scoreEl, currentVal);
+
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            bar.style.width = '100%';
+            scoreEl.textContent = '100';
+            updateThresholdColors(bar, scoreEl, 100);
+            row.classList.add('is-complete');
+          }
+        };
+
+        requestAnimationFrame(tick);
+      }, delay);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            card.dataset.animated = 'true';
+            rows.forEach((row, index) => {
+              animateRow(row, 250 + index * 320);
+            });
+
+            setTimeout(() => {
+              if (badge) {
+                badge.classList.remove('opacity-0', 'translate-y-1');
+              }
+            }, 250 + rows.length * 320 + 950);
+
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(card);
+  }
+
+  initLighthouseCard();
+  document.addEventListener('astro:page-load', initLighthouseCard);
+</script>
+
+
+
+            <div class="space-y-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+                <p>
+                    Hi, I’m {owner}. I run FeatherBuilds on my own—which means
+                    when you hire me, you work directly with the person
+                    designing, coding, launching, and managing your site. No
+                    salespeople, no account managers, and no hand-offs.
+                </p>
+                <p>
+                    Most small-business websites rely on bloated templates that
+                    all end up looking the same—and leave you stuck with slow
+                    load times and insecure plugins. I build every site from
+                    scratch with clean, hand-written code so your business
+                    actually stands out. Your pages load in a fraction of a
+                    second, work effortlessly on phones, and won’t break when a
+                    third-party tool updates. Clean, SEO-friendly code doesn’t
+                    just help your search rankings—it gives your visitors a
+                    better experience from the first click.
+                </p>
+                <p>
+                    I also hate change orders—and you shouldn’t have to wait
+                    days or pay an invoice just to update your hours, swap a
+                    photo, or post a new offer. Every build comes with your own
+                    simple editing studio so you can make everyday updates
+                    yourself in seconds.
+                </p>
+                <p>
+                    And when you need something bigger—a new page, a layout
+                    tweak, or a fresh feature—you just text the guy who built
+                    it.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA + BRIDGE TO WHY FEATHERBUILDS -->
+    <section class="max-w-7xl mx-auto px-6 pb-24 md:pb-32">
+        <div
+            data-perch="2"
+            class="rounded-3xl border border-emerald-500/25 bg-emerald-500/[0.08] p-10 md:p-16 text-center max-w-5xl mx-auto"
+        >
+            <h2 class="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-white max-w-2xl mx-auto">
+                Let’s talk about your site.
+            </h2>
+            <p class="mt-4 text-zinc-700 dark:text-zinc-300 max-w-xl mx-auto">
+                Ready to get started, or want to see how a build works from
+                start to finish?
+            </p>
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <a
+                    href="/#contact"
+                    class="px-8 py-4 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors"
+                >
+                    Start a Build
+                </a>
+                <a
+                    href="/why-featherbuilds"
+                    class="px-8 py-4 rounded-full border border-zinc-300 dark:border-white/15 font-semibold text-zinc-900 dark:text-white hover:bg-zinc-900/5 dark:hover:bg-white/5 transition-colors"
+                >
+                    See How It Works
+                </a>
+            </div>
+        </div>
+    </section>
+</Layout>

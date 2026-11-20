@@ -116,7 +116,7 @@ return { left: left, right: right, top: top + fs * 0.26, width: right - left };
 
     /* ---------- sizing ---------- */
     function size() {
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      DPR = Math.min(window.devicePixelRatio || 1, 1.5);
       W = bgCanvas.clientWidth || window.innerWidth;
       H = bgCanvas.clientHeight || window.innerHeight;
       [bgCanvas, fgCanvas].forEach((c) => {
@@ -397,15 +397,18 @@ gr.addColorStop(1, 'rgba(190,240,120,0)');
         turnAt: 0, turned: false, peak: null, path: null
       };
     }
-    function pickPeak(avoid) {
-      const occ = occEls.map((el) => el.getBoundingClientRect());
-      const inView = (p) => p.x > 70 && p.x < W - 70;
-      const free = (p) => !occ.some((r) => p.x > r.left - 10 && p.x < r.right + 10 && p.y > r.top - 24 && p.y < r.bottom + 10);
-      let c = peaks.filter((p) => inView(p) && free(p) && (!avoid || (p !== avoid && Math.abs(p.x - avoid.x) > 140)));
-      if (!c.length) c = peaks.filter(inView);
-      if (!c.length) c = peaks;
-      return c[Math.floor(Math.random() * c.length)];
-    }
+    function covered(x, y) {
+  for (const r of rects.values()) {
+    if (r.width > 40 && r.height > 40 &&
+        x > r.left - 14 && x < r.right + 14 && y > r.top - 24 && y < r.bottom + 14) return true;
+  }
+  return false;
+}
+function pickPeak(avoid) {
+  const c = peaks.filter((p) => p.x > 70 && p.x < W - 70 && !covered(p.x, p.y) &&
+    (!avoid || (p !== avoid && Math.abs(p.x - avoid.x) > 140)));
+  return c.length ? c[Math.floor(Math.random() * c.length)] : null;
+}
        function spawnBird() {
       const small = W < 768;
       const k = small ? 1.3 : 1;
@@ -423,14 +426,14 @@ gr.addColorStop(1, 'rgba(190,240,120,0)');
         bird.path = makePath(x0, y0, tx, ty, 0.9, s1, clamp(Math.hypot(tx - x0, ty - y0) / 210, 2.8, 6), rand(50, 120), 'out');
         return;
       }
-      if (small || !peaks.length || Math.random() < 0.22) {
+           const pk = (small || !peaks.length || Math.random() < 0.22) ? null : pickPeak(null);
+      if (!pk) {
         const x1 = fromLeft ? W + 80 : -80, y1 = H * rand(0.1, 0.35);
         bird = newBird(x0, y0, 0.8 * k);
         bird.mode = 'flyby'; bird.onEl = true;
         bird.path = makePath(x0, y0, x1, y1, 0.8 * k, 0.55 * k, clamp(W / 260, 4, 8), rand(60, 120), 'lin');
         return;
       }
-      const pk = pickPeak(null);
       const s1 = PERCH_S[pk.layer];
       const ty = pk.y - (FOOT - 2) * s1;
       bird = newBird(x0, y0, 0.9);
@@ -439,23 +442,23 @@ gr.addColorStop(1, 'rgba(190,240,120,0)');
     }
 
     function depart(fast) {
-  const b = bird;
-  if (!fast && Math.random() < 0.8) {
-    releaseFeather(b.x - b.facing * 4 * b.s, b.y + 6 * b.s, clamp(0.18 + (b.s - 0.3) * 0.5, 0.18, 0.5));
-  }
-  if (!fast && W >= 768 && Math.random() < 0.35 && peaks.length > 2) {
-    const pk = pickPeak(b.peak);
-    const s1 = PERCH_S[pk.layer];
-    const ty = pk.y - (FOOT - 2) * s1;
-    b.mode = 'hop'; b.peak = pk; b.perchEl = null;
-    b.path = makePath(b.x, b.y, pk.x, ty, b.s, s1, clamp(Math.hypot(pk.x - b.x, ty - b.y) / 180, 1.6, 4), rand(30, 80), 'io');
-  } else {
-    const dir = Math.random() > 0.5 ? 1 : -1;
-    const x1 = dir > 0 ? W + 100 : -100, y1 = -60 + Math.random() * H * 0.25;
-    b.mode = 'depart'; b.perchEl = null;
-    b.path = makePath(b.x, b.y, x1, y1, b.s, 0.95, fast ? rand(1.6, 2.4) : rand(3.2, 4.4), rand(40, 100), 'in');
-  }
-}
+      const b = bird;
+      if (!fast && Math.random() < 0.8) {
+        releaseFeather(b.x - b.facing * 4 * b.s, b.y + 6 * b.s, clamp(0.18 + (b.s - 0.3) * 0.5, 0.18, 0.5));
+      }
+      const pk = (!fast && W >= 768 && Math.random() < 0.35 && peaks.length > 2) ? pickPeak(b.peak) : null;
+      if (pk) {
+        const s1 = PERCH_S[pk.layer];
+        const ty = pk.y - (FOOT - 2) * s1;
+        b.mode = 'hop'; b.peak = pk; b.perchEl = null;
+        b.path = makePath(b.x, b.y, pk.x, ty, b.s, s1, clamp(Math.hypot(pk.x - b.x, ty - b.y) / 180, 1.6, 4), rand(30, 80), 'io');
+      } else {
+        const dir = Math.random() > 0.5 ? 1 : -1;
+        const x1 = dir > 0 ? W + 100 : -100, y1 = -60 + Math.random() * H * 0.25;
+        b.mode = 'depart'; b.perchEl = null;
+        b.path = makePath(b.x, b.y, x1, y1, b.s, 0.95, fast ? rand(1.6, 2.4) : rand(3.2, 4.4), rand(40, 100), 'in');
+      }
+    }
     function updateBird(dt) {
       const b = bird;
       if (b.mode === 'perch') {
@@ -474,10 +477,14 @@ gr.addColorStop(1, 'rgba(190,240,120,0)');
           b.x = r.left + b.perchFx * r.width;
           b.y = r.top - FOOT * b.s;
         }
+        else if (covered(b.x, b.y) || (performance.now() - lastScroll < 120 && b.timer > 0.6)) { depart(true); return; }
+
         if (b.timer > b.dur) depart();
         return;
         }
       const p = b.path;
+
+      if (b.peak && (b.mode === 'arrive' || b.mode === 'hop') && covered(p.x1, p.y1)) { depart(true); return; }
 
       if (b.mode === 'arrive' && b.perchEl) {
         const r = perchRect(b.perchEl);
@@ -819,13 +826,14 @@ gr.addColorStop(1, 'rgba(190,240,120,0)');
 
     /* ---------- loop ---------- */
     let raf = 0, last = 0, running = false;
+    let tick = 0;
     function frame(ts) {
       raf = requestAnimationFrame(frame);
       const dt = Math.min((ts - last) / 1000, 0.05);
       last = ts; clock += dt;
       const dark = isDark();
       update(dt, dark);
-      renderBg(dark);
+      if (bird || (tick ^= 1)) renderBg(dark);
       renderFg(dark);
     }
     function startLoop() {

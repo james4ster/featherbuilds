@@ -1,25 +1,40 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+
+const site = Astro.site?.href ?? Astro.url.origin;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'FeatherBuilds',
+  url: site,
+  description: 'Hand-coded, fast websites for small businesses in the US and Canada, with an editing studio clients control.',
+  areaServed: [
+    { '@type': 'Country', name: 'United States' },
+    { '@type': 'Country', name: 'Canada' }
+  ]
+};
+
 
 const steps = [
-  { n: '01', t: 'Designed Around Your Taste', d: 'Tell us about the experience you want to create. Direct every detail yourself or let us create something original to your liking.' },
+  { n: '01', t: 'Designed Around Your Taste', d: 'Tell me about the experience you want to create. Direct every detail yourself or let me create something original to your liking.' },
   { n: '02', t: 'Custom Code, Feather-Light', d: 'Hand-coded from the ground up for a one-of-a-kind, studio-grade design and near-perfect Google PageSpeed scores.' },
   { n: '03', t: ' Edits Without Change Orders', d: 'Change a headline, add a photo, update a product, or post events anytime without touching code.' }
 ]; 
 /*
 const steps = [
-  { n: '01', t: 'One short conversation', d: 'Tell us about your business and the look you want. No long questionnaires, no homework.' },
-  { n: '02', t: 'We design and build it', d: 'Hand-coded around your brand. You review a preview and tell us what to change. We do the rest.' },
-  { n: '03', t: 'Launch, then relax', d: 'We take it live. Edit it yourself anytime, or just text us and we will make the change.' }
+  { n: '01', t: 'One short conversation', d: 'Tell me about your business and the look you want. No long questionnaires, no homework.' },
+  { n: '02', t: 'I design and build it', d: 'Hand-coded around your brand. You review a preview and tell me what to change. I do the rest.' },
+  { n: '03', t: 'Launch, then relax', d: 'I take it live. Edit it yourself anytime using an easy to use studio.' }
 ];
 */
 const included = [
   { t: 'Designed and coded by hand', d: 'Every layout is built around your brand. No templates, no page builders.' },
-  { t: 'Fast, secure hosting', d: 'Pre-built pages on a global edge network, with no database or plugins exposed to attack.' },
-  { t: 'Your own editing studio', d: 'Update text, photos and offers yourself in Sanity whenever you like.' },
+  { t: 'Fast, secure hosting', d: 'Custom-built pages on a global edge network, with no plugins exposed to attack.' },
   { t: 'SEO foundations', d: 'Clean markup, fast Core Web Vitals and metadata done properly.' },
   { t: 'Edit it yourself', d: 'Update text, photos and events yourself whenever you like.' },
-  { t: 'Support from the owner', d: 'Call or text and you reach the person who built your site.' }
+  { t: 'Built for mobile first', d: 'Tested on real phones so customers get the information without pinching.' },
+  { t: 'Support from the owner', d: 'Call or text and you reach the person who built your site.' 
+  },  
 ];
 const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-hidden="true">
   <g class="bird-head">
@@ -38,76 +53,11 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
   <g class="bird-wing"><ellipse cx="13" cy="49" rx="10" ry="5.5"/><ellipse cx="59" cy="49" rx="10" ry="5.5"/></g>
 </svg>`;
 ---
-
-<html lang="en" class="dark scroll-smooth">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FeatherBuilds | Hand-Coded, Feather-Light Websites</title>
-    <meta name="description" content="Custom-coded websites built for speed, with fluid motion graphics that don't slow the page down." />
-    <meta name="color-scheme" content="dark light" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" />
-    </noscript>
-
-    <script is:inline>
-      (function () {
-        try {
-          var t = localStorage.getItem('theme');
-          if (t === 'light' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-            document.documentElement.classList.remove('dark');
-          }
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-
-  <body class="bg-linear-to-b from-sky-100 via-emerald-50/60 to-emerald-100/40 text-zinc-900 dark:from-[#05070a] dark:via-[#08100f] dark:to-[#06130f] dark:text-zinc-100 antialiased overflow-x-hidden transition-colors duration-500 min-h-screen">
-
-    <canvas id="forest-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-0" aria-hidden="true"></canvas>
-
-    <header id="site-header" class="sticky top-0 z-30 border-b border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md transition-colors duration-300">
-      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-2.5 font-display font-extrabold text-xl tracking-tight text-zinc-950 dark:text-white">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
-              <line x1="16" y1="8" x2="2" y2="22"></line>
-              <line x1="17.5" y1="15" x2="9" y2="15"></line>
-            </svg>
-          </span>
-          FeatherBuilds
-        </a>
-
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400" aria-label="Primary">
-          <a href="#value" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why Featherbuilds</a>
-          <a href="#process" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Our Process</a>
-          <a href="#pricing" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Pricing</a>
-        </nav>
-
-        <div class="flex items-center gap-3">
-          <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="theme-switch">
-            <span class="knob"></span>
-          </button>
-
-          <a href="#contact" class="px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
-            Start a Build
-          </a>
-        </div>
-      </div>
-    </header>
-
-    <main class="relative z-10">
-
+<Layout
+  title="Custom-Coded Small Business Websites | FeatherBuilds"
+  description="Hand-coded, fast websites for small businesses in the US and Canada. Edit it yourself in a simple studio, or let us handle the changes."
+  jsonLd={jsonLd}
+>
       <!-- HERO -->
       <section class="max-w-7xl mx-auto px-6 pt-16 pb-32 md:pt-24 md:pb-40 text-center">
 
@@ -116,15 +66,15 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
         </h1>
 
         <p class="rise mt-6 text-lg md:text-xl text-zinc-700 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed" style="--d:0.28s">
-          We build custom, motion-rich websites that load fast and score at the top of Google PageSpeed, turning more local traffic into paying customers.
+          I build custom, motion-rich websites that load fast and score at the top of Google PageSpeed, turning more local traffic into paying customers.
         </p>
 
         <div class="rise mt-12 flex flex-col sm:flex-row items-center justify-center gap-4" style="--d:0.4s">
           <a data-perch="1" data-bird href="#pricing" class="w-full sm:w-auto px-8 py-4 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold text-base hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.45)]">
             See Pricing
           </a>
-          <a data-perch="1" data-bird href="#approach" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/90 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-semibold text-base hover:bg-white dark:hover:bg-white/10 transition-colors backdrop-blur-sm">
-            How We Build
+          <a data-perch="1" data-bird href="#process" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/90 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-semibold text-base hover:bg-white dark:hover:bg-white/10 transition-colors backdrop-blur-sm">
+            See what sets Featherbuilds apart
           </a>
         </div>
         <ul class="rise mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-medium text-zinc-600 dark:text-zinc-400" style="--d:0.5s">
@@ -143,7 +93,7 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
     Never worry about your website again.
   </h2>
   <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[62ch]">
-    We craft custom, high-speed websites for businesses that want to stand out online instead of looking like a vibe-coded template. By writing clean, modern code from scratch—instead of relying on sluggish templates or page builders—we deliver studio-grade design that loads instantaneously and ranks higher on Google. And once you launch, you’re always in control—upload images, update products, or post new events yourself in seconds without touching code.
+    We craft custom, high-speed websites for businesses that want to stand out online instead of looking like a vibe-coded template. By writing clean, modern code from scratch—instead of relying on sluggish templates or page builders—we deliver studio-grade design that loads instantaneously and helps you rank higher on Google. And once you launch, you’re always in control—upload images, update products, or post new events yourself in seconds without touching code.
   </p>
 </div>
 
@@ -265,7 +215,7 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
           Light on your time, start to finish.
         </h2>
         <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[56ch]">
-          You run your business. We handle the design, the code and the launch, and you only step in where your input matters.
+          You run your business. I handle the design, the code and the launch, and you only step in where your input matters.
         </p>
       </div>
 
@@ -330,38 +280,20 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
       <section id="contact" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
         <div data-perch="2" class="rounded-3xl border border-emerald-500/25 bg-emerald-500/[0.08] backdrop-blur-md p-10 md:p-16 text-center">
           <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white max-w-2xl mx-auto">
-            Tell us about your business.
+            Tell me about your business.
           </h2>
           <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300 max-w-xl mx-auto">Send a few lines about what you do and what you need. You will hear back from the person who builds your site.</p>
           <!-- TODO: replace with your real email -->
           <a href="mailto:hello@example.com" class="mt-8 inline-flex px-8 py-4 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
-            Email us
+            Email me
           </a>
         </div>
       </section>
-
-    </main>
-
-    <footer class="relative z-10 border-t border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md">
-      <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
-    </footer>
-
-    <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-40" aria-hidden="true"></canvas>
-
-    <script src="/feathers.js" defer></script>
-    <script is:inline>
-  (function () {
-    if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { e.target.classList.toggle('is-active', e.isIntersecting); });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('.vcard').forEach(function (c) { io.observe(c); });
-  })();
-
+<script is:inline>
   (function () {
     var ol = document.querySelector('.steps');
     if (!ol || !('IntersectionObserver' in window)) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // stays fully lit
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var steps = Array.prototype.slice.call(ol.querySelectorAll('.step'));
     var wide = window.matchMedia('(min-width: 768px)');
     ol.classList.add('armed');
@@ -377,5 +309,4 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
     steps.forEach(function (s) { io.observe(s); });
   })();
 </script>
-  </body>
-</html>
+</Layout>
