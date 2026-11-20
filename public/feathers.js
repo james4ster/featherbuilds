@@ -445,7 +445,7 @@
       if (!el) { navOpen = false; return; }
       const fromLeft = Math.random() > 0.5;
       const x0 = fromLeft ? -60 : W + 60, y0 = H * rand(0.1, 0.4);
-      const fx = 0.78, s1 = 0.95, r = el.getBoundingClientRect();
+      const fx = rand(0.15, 0.85), s1 = 0.95, r = el.getBoundingClientRect();
       const tx = r.left + fx * r.width, ty = r.top - FOOT * s1;
       bird = newBird(x0, y0, 0.9);
       bird.nav = true; bird.mode = 'arrive'; bird.perchEl = el; bird.perchFx = fx; bird.onEl = true; bird.scrollAtSpawn = lastScroll;
@@ -732,7 +732,13 @@
         } else {
           if (f.slot) {
             const r = rects.get(f.slot.el);
-            if (r) { f.x = r.left + f.slot.fx * r.width; f.y = r.top - 6 - f.slot.stack * 1.7; }
+            if (r) {
+              const tx = r.left + f.slot.fx * r.width, ty = r.top - 6 - f.slot.stack * 1.7;
+              const vy = ty - f.y, k = Math.min(1, dt * 12);
+              f.x += (tx - f.x) * k; f.y += vy * k;
+              if (Math.abs(vy) > 300) { f.x = tx; f.y = ty; }
+              f.sway = (f.sway || 0) + (clamp(vy * 0.012, -0.6, 0.6) - (f.sway || 0)) * Math.min(1, dt * 10);
+            }
             else if (f.state === 'rest') f.state = 'fade';
           }
           if (f.state === 'fade') {
@@ -751,13 +757,13 @@
       if (!sp) return;
       const sz = 0.95 * f.depth;
       fg.save();
-      fg.globalAlpha = f.alpha * (0.4 + 0.6 * f.depth) * (f.state === 'drift' ? 1 : scrollFade);
+      fg.globalAlpha = f.alpha * (0.4 + 0.6 * f.depth);
       fg.translate(f.x, f.y);
       if (f.state !== 'drift' && !dark) {
         fg.fillStyle = 'rgba(6,78,59,0.14)';
         fg.beginPath(); fg.ellipse(0, 4, 22 * sz, 2.4, 0, 0, TAU); fg.fill();
       }
-      fg.rotate(f.angle);
+      fg.rotate(f.angle + (f.state === 'drift' ? 0 : (f.sway || 0) + Math.sin(clock * 16) * Math.min(0.25, Math.abs(f.sway || 0))));
       fg.scale(sz * f.flip, sz * f.tilt);
       fg.drawImage(sp, -32, -14, 64, 28);
       fg.restore();
