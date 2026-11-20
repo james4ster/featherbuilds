@@ -424,3 +424,75 @@
 .ws-buy { display: flex; justify-content: space-between; align-items: center; margin-top: .35rem; font-weight: 800; font-size: .85rem; }
 .ws-buy span { font-size: .62rem; font-weight: 800; padding: .3rem .55rem; border-radius: 999px; background: var(--ac); color: #fff; }
 .ws-tag { position: absolute; top: .9rem; left: .9rem; z-index: 1; font-size: .55rem; font-weight: 800; padding: .15rem .4rem; border-radius: 4px; background: var(--ac); color: #fff; }
+
+/* ---------- Mobile nav ---------- */
+.theme-switch { flex: none; }
+.burger { position: relative; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; border: 1px solid rgba(113, 113, 122, 0.3); }
+.burger i { position: absolute; left: 50%; top: 50%; width: 1.1rem; height: 2px; margin: -1px 0 0 -0.55rem; border-radius: 2px; background: currentColor; transition: transform 0.35s cubic-bezier(0.5, 0, 0.2, 1); }
+.burger i:first-child { transform: translateY(-4px); }
+.burger i:last-child { transform: translateY(4px); }
+.burger[aria-expanded='true'] i:first-child { transform: rotate(45deg); }
+.burger[aria-expanded='true'] i:last-child { transform: rotate(-45deg); }
+
+.mnav {
+  position: fixed; inset: 5rem 0 0 0; z-index: 45; overflow-y: auto;
+  background: radial-gradient(70% 45% at 50% 100%, rgba(16, 185, 129, 0.16), transparent 70%), rgba(255, 255, 255, 0.97);
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
+}
+.dark .mnav { background: radial-gradient(70% 45% at 50% 100%, rgba(16, 185, 129, 0.16), transparent 70%), rgba(6, 8, 10, 0.97); }
+.mnav.open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.mtrees { position: absolute; left: 0; bottom: 0; width: 100%; height: 9rem; fill: rgba(16, 185, 129, 0.12); pointer-events: none; }
+.mlabel { padding-bottom: 0.5rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #71717a; }
+
+.mlink { display: flex; align-items: center; gap: 1rem; padding: 1.05rem 0; border-bottom: 1px solid rgba(113, 113, 122, 0.2); }
+.mlink, .mfade, .mlabel { opacity: 0; transform: translateX(-14px); }
+.mnav.open :is(.mlink, .mfade, .mlabel) { animation: mslide 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 0.06s + 0.08s) forwards; }
+@keyframes mslide { to { opacity: 1; transform: none; } }
+.mnum { min-width: 1.6rem; color: #10b981; }
+.marrow { font-size: 1.4rem; color: #10b981; opacity: 0.5; transition: transform 0.25s ease, opacity 0.25s ease; }
+.mlink:active { background: linear-gradient(90deg, rgba(16, 185, 129, 0.12), transparent); }
+.mlink:active .marrow { transform: translateX(6px); opacity: 1; }
+.mlink[aria-current] { color: #047857; }
+.dark .mlink[aria-current] { color: #6ee7b7; }
+.mlink[aria-current] .marrow { opacity: 1; }
+.mcta { box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.7); }
+
+.mbird .peek { transform: translateY(100%); }
+.mnav.open .mbird .peek { transform: none; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s; }
+.mnav.open .mbird .bird-head { animation: bob 2.6s ease-in-out 1.6s infinite; }
+.mnav.open .mbird .bird-eyes { animation: blink 3.6s ease 1.8s infinite; }
+html.nav-open { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .mnav, .burger i, .mbird .peek { transition-duration: 0.01ms !important; transition-delay: 0s !important; } .mnav.open :is(.mlink, .mfade, .mlabel) { animation-duration: 0.01ms; animation-delay: 0s; } .mnav.open .mbird :is(.bird-head, .bird-eyes) { animation: none; } }
+
+/* ===== Perched bird on the mobile nav button ===== */
+.mperch { position: absolute; right: 2.25rem; bottom: 100%; margin-bottom: -1px; width: 110px; pointer-events: none; z-index: 11; }
+.mperch svg { display: block; width: 100%; height: auto; overflow: visible; transform-origin: 55% 100%; }
+.pbird { --bl: #064e3b; }
+.dark .pbird { --bl: #04271e; }
+.pb-wing { fill: #047857; stroke: var(--bl); stroke-width: 1.6; stroke-linejoin: round; }
+.dark .pb-wing { fill: #059669; }
+.pb-tail { fill: #065f46; stroke: var(--bl); stroke-width: 1.8; stroke-linejoin: round; transform-box: fill-box; transform-origin: 100% 40%; }
+.dark .pb-tail { fill: #047857; }
+.pb-legs { fill: none; stroke: #f59e0b; stroke-width: 1.6; stroke-linecap: round; }
+.dark .pb-legs { stroke: #fbbf24; }
+.pb-head { transform-box: fill-box; transform-origin: 40% 95%; }
+.pbird .bird-eyes { transform-box: fill-box; transform-origin: center; }
+ 
+.mnav.open .mperch { animation: pbin .6s cubic-bezier(.34, 1.56, .64, 1) .5s backwards; }
+.mnav.open .mperch svg { animation: pblook 9s ease-in-out 1.4s infinite; }
+.mnav.open .pb-head { animation: pbtilt 4.5s ease-in-out 1.2s infinite; }
+.mnav.open .pbird .bird-eyes { animation: pbblink 3.8s ease 1.5s infinite; }
+.mnav.open .pb-tail { animation: pbwag 2.4s ease-in-out infinite; }
+@keyframes pbin { from { opacity: 0; transform: translateY(10px); } }
+@keyframes pblook {
+  0%, 26% { transform: scaleX(1) translateY(0); }
+  28% { transform: scaleX(1) translateY(-4px); }
+  30%, 56% { transform: scaleX(-1) translateY(0); }
+  58% { transform: scaleX(-1) translateY(-4px); }
+  60%, 100% { transform: scaleX(1) translateY(0); }
+}
+@keyframes pbtilt { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-9deg); } 40% { transform: rotate(6deg); } 60% { transform: rotate(0); } 80% { transform: rotate(8deg); } }
+@keyframes pbblink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
+@keyframes pbwag { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-5deg); } }
+@media (prefers-reduced-motion: reduce) { .mperch, .mperch * { animation: none !important; } }

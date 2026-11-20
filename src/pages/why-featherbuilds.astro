@@ -102,22 +102,12 @@ const h2 =
       data-bird
       class={`mt-12 mx-auto text-left overflow-hidden ${card}`}
     >
-      <div
-        role="tablist"
-        class="flex gap-2 overflow-x-auto p-3 border-b border-zinc-200/80 dark:border-white/10"
-      >
-        {tabs.map((k, i) => (
-          <button
-            type="button"
-            role="tab"
-            aria-selected={i === 0}
-            class="tab shrink-0 px-4 py-2 rounded-full text-sm font-semibold text-zinc-600 dark:text-zinc-400"
-          >
-            {k}
-          </button>
-        ))}
-      </div>
-      <div class="grid lg:grid-cols-[19rem_1fr]">
+      <div role="tablist" class="grid grid-cols-4 gap-1 p-2 sm:flex sm:gap-2 sm:p-3 border-b border-zinc-200/80 dark:border-white/10">
+  {tabs.map((k, i) => (
+    <button type="button" role="tab" aria-selected={i === 0} class="tab px-2 sm:px-4 py-2 rounded-full text-xs sm:text-sm text-center font-semibold text-zinc-600 dark:text-zinc-400">{k}</button>
+  ))}
+</div>
+      <div class="grid grid-cols-1 lg:grid-cols-[19rem_minmax(0,1fr)]">
         <form
           id="x-form"
           novalidate
@@ -169,7 +159,9 @@ const h2 =
                 class="ml-2 text-[11px] text-zinc-500 dark:text-zinc-400"
               ></span>
             </div>
-            <div id="site" class="site" data-th="wine"></div>
+            <div id="sitewrap" class="relative overflow-hidden">
+  <div id="site" class="site absolute left-0 top-0 origin-top-left" data-th="wine"></div>
+</div>
           </div>
         </div>
       </div>
@@ -198,11 +190,9 @@ const h2 =
         </div>
         <div class="p-6 min-h-[19rem]">
           <div class="flex items-center gap-3">
-            <i class="spin"></i>
-            <span class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-              Loading plugins…
-            </span>
-          </div>
+  <i class="spin"></i>
+  <span class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Loading plugins…</span>
+</div>
           <div class="bar mt-3 h-1.5 rounded bg-zinc-300/50 dark:bg-white/10">
             <i></i>
           </div>
@@ -370,6 +360,18 @@ const h2 =
     var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     var price = function (p) { return /^\d/.test(p) ? '$' + p : p; };
     var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); };
+    var wrap = $('#sitewrap'), site = $('#site');
+var lw = 0;
+function fit() {
+  var s = Math.min(1, wrap.clientWidth / 720);
+  site.style.width = s < 1 ? '720px' : '100%';
+  site.style.transform = s < 1 ? 'scale(' + s + ')' : 'none';
+  wrap.style.height = Math.ceil(site.offsetHeight * s) + 'px';
+}
+new ResizeObserver(function () {
+  if (wrap.clientWidth !== lw) { lw = wrap.clientWidth; fit(); }
+}).observe(wrap);
+
     // f: [label, default, maxlength, input type]
     var T = [
       { n: 'Riverside Winery', url: 'riversidewinery.com', th: 'wine', nav: ['Wines', 'Visit', 'Events', 'Club'], btn: 'Book a tasting', t: '.ws-split',
@@ -421,7 +423,8 @@ const h2 =
       s.setAttribute('data-th', d.th); $('#x-url').textContent = d.url;
       s.innerHTML = (a ? '<div class="ws-alert' + (v ? ' sx-new' : '') + '">' + a + '</div>' : '') +
         '<header class="ws-hd"><b>' + d.n + '</b><nav>' + d.nav.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</nav><span class="ws-btn">' + d.btn + '</span></header>' + d.body(v);
-    }
+      fit();
+      }
     function show(i) {
       var d = T[i], s = $('#site'); cur = i;
       tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === i); });
@@ -432,14 +435,17 @@ const h2 =
       mount(i, null); s.classList.remove('swap'); void s.offsetWidth; s.classList.add('swap');
     }
     form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      var ins = [].slice.call(form.querySelectorAll('input')), v = ins.map(function (x) { return x.value.trim(); });
-      if (!v[0]) { ins[0].focus(); return; }
-      var p = $('#x-pub'), d = T[cur];
-      p.classList.add('press'); await sleep(250); p.classList.remove('press', 'ready'); await sleep(350);
-      mount(cur, v); var t = $('#site').querySelector(d.t); if (t) t.classList.add('fresh');
-      $('#x-toast').classList.add('on');
-    });
+  e.preventDefault();
+  var ins = [].slice.call(form.querySelectorAll('input')), v = ins.map(function (x) { return x.value.trim(); });
+  if (!v[0]) { ins[0].focus(); return; }
+  if (document.activeElement) document.activeElement.blur();
+  var p = $('#x-pub'), d = T[cur];
+  p.classList.add('press'); await sleep(250); p.classList.remove('press', 'ready'); await sleep(350);
+  mount(cur, v); var t = $('#site').querySelector(d.t); if (t) t.classList.add('fresh');
+  $('#x-toast').classList.add('on');
+  var n = $('#site').querySelector('.sx-new') || t;
+  if (n) n.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: matchMedia('(min-width:1024px)').matches ? 'nearest' : 'center' });
+});
     tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i); }); });
     mount(0, null);
     function count(el) {

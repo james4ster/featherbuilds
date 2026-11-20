@@ -12,6 +12,16 @@ const { title, description, image = '/og-image.png', jsonLd } = Astro.props;
 const origin = Astro.site ?? new URL(Astro.url.origin);
 const canonical = new URL(Astro.url.pathname, origin).href;
 const ogImage = new URL(image, origin).href;
+
+const links = [
+  ['What We Do', '/#value'],
+  ['Our Process', '/#process'],
+  ['Why FeatherBuilds', '/why-featherbuilds'],
+  ['Pricing', '/#pricing'],
+  ['About', '/about']
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
 ---
 <!doctype html>
 <html lang="en" class="dark scroll-smooth">
@@ -73,23 +83,44 @@ const ogImage = new URL(image, origin).href;
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400" aria-label="Primary">
-          <a href="/#value" class="hover:text-zinc-950 dark:hover:text-white transition-colors">What I Do</a>
-          <a href="/#process" class="hover:text-zinc-950 dark:hover:text-white transition-colors">The Process</a>
-          <a href="/#pricing" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Pricing</a>
-          <a href="/why-featherbuilds" class="hover:text-zinc-950 dark:hover:text-white transition-colors">Why Featherbuilds?</a>
-          <a href="/about" class="hover:text-zinc-950 dark:hover:text-white transition-colors">About</a>
+          {links.map(([t, h]) => (
+            <a href={h} aria-current={h === path ? 'page' : undefined} class={`hover:text-zinc-950 dark:hover:text-white transition-colors ${h === path ? 'text-zinc-950 dark:text-white' : ''}`}>{t}</a>
+          ))}
         </nav>
 
         <div class="flex items-center gap-3">
           <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="theme-switch">
             <span class="knob"></span>
           </button>
-          <a href="/#contact" class="px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
+
+          <a href="/#contact" class="hidden md:inline-flex px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
             Start a Build
           </a>
+
+          <button id="nav-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mnav" class="burger md:hidden text-zinc-900 dark:text-white"><i></i><i></i></button>
         </div>
       </div>
     </header>
+
+    <div id="mnav" class="mnav md:hidden" inert>
+      <svg class="mtrees" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M-10 120L12 50 34 120ZM20 120L48 20 76 120ZM70 120L90 60 110 120ZM100 120L130 10 160 120ZM150 120L172 55 194 120ZM185 120L215 25 245 120ZM240 120L262 65 284 120ZM275 120L305 15 335 120ZM325 120L350 55 375 120ZM365 120L395 30 425 120Z"/></svg>
+      <nav class="relative z-10 max-w-7xl mx-auto px-6 pt-6 pb-8 min-h-full flex flex-col" aria-label="Mobile">
+        <p class="mlabel mfade" style="--i:0">Navigate</p>
+        {links.map(([t, h], i) => (
+          <a href={h} style={`--i:${i + 1}`} aria-current={h === path ? 'page' : undefined} class="mlink text-zinc-950 dark:text-white">
+            <span class="mnum font-display text-sm font-bold">0{i + 1}</span>
+            <span class="flex-1 font-display text-[2.1rem] leading-none font-extrabold tracking-tight">{t}</span>
+            <span class="marrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+        <p class="mfade mt-5 text-sm text-zinc-500" style={`--i:${links.length + 1}`}>Hand-coded. Feather-light.</p>
+           <div class="mfade mt-auto pt-24" style={`--i:${links.length + 2}`}>
+          <div class="relative">
+            <a href="/#contact" class="mcta relative z-10 flex justify-center rounded-full bg-emerald-500 dark:bg-emerald-400 py-4 text-lg font-bold text-zinc-950">Start a Build</a>
+          </div>
+        </div>
+      </nav>
+    </div>
 
     <main class="relative z-10">
       <slot />
@@ -99,7 +130,7 @@ const ogImage = new URL(image, origin).href;
       <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
     </footer>
 
-    <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-40" aria-hidden="true"></canvas>
+    <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-[9999]" aria-hidden="true"></canvas>
 
     <script src="/feathers.js" defer></script>
     <script is:inline>
@@ -109,6 +140,22 @@ const ogImage = new URL(image, origin).href;
           entries.forEach(function (e) { e.target.classList.toggle('is-active', e.isIntersecting); });
         }, { threshold: 0.5 });
         document.querySelectorAll('.vcard').forEach(function (c) { io.observe(c); });
+      })();
+
+      (function () {
+        var b = document.getElementById('nav-btn'), m = document.getElementById('mnav');
+        if (!b || !m) return;
+        function set(o) {
+          b.setAttribute('aria-expanded', o);
+          m.classList.toggle('open', o);
+          m.inert = !o;
+          document.documentElement.classList.toggle('nav-open', o);
+          window.dispatchEvent(new CustomEvent('navtoggle', { detail: o }));
+        }
+        b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+        m.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+        addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+        matchMedia('(min-width:768px)').addEventListener('change', function (e) { if (e.matches) set(false); });
       })();
     </script>
   </body>
