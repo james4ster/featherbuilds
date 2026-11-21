@@ -496,3 +496,18 @@ html.nav-open { overflow: hidden; }
 @keyframes pbblink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
 @keyframes pbwag { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-5deg); } }
 @media (prefers-reduced-motion: reduce) { .mperch, .mperch * { animation: none !important; } }
+
+
+
+/* ===== Header logo bird ===== */
+.logo-bird { transition: transform .35s cubic-bezier(.34, 1.56, .64, 1); transform-origin: 50% 90%; }
+.logo-link:is(:hover, :focus-visible) .logo-bird { transform: translateY(-3px) rotate(-8deg) scale(1.08); }
+.lb-crest { transform-box: fill-box; transform-origin: 50% 100%; }
+.logo-link:is(:hover, :focus-visible) .lb-crest { animation: lbwig .5s ease-in-out .1s 2; }
+.lb-pupil { transition: transform .3s ease; }
+.logo-link:is(:hover, :focus-visible) .lb-pupil { transform: translate(.9px, -.4px); }
+.lb-eyes { transform-box: fill-box; transform-origin: center; }
+.logo-link:is(:hover, :focus-visible) .lb-eyes { animation: lbblink 1.2s ease .5s; }
+@keyframes lbwig { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-14deg); } 70% { transform: rotate(12deg); } }
+@keyframes lbblink { 0%, 40%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.1); } }
+@media (prefers-reduced-motion: reduce) { .logo-bird, .logo-bird * { transition: none !important; animation: none !important; } }
