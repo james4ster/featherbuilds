@@ -16,8 +16,8 @@ const canonical = new URL(Astro.url.pathname, origin).href;
 const ogImage = new URL(image, origin).href;
 
 const links = [
-  ['What We Do', '/#value'],
-  ['Our Process', '/#process'],
+  ['What I Do', '/#value'],
+  ['The Process', '/#process'],
   ['Why FeatherBuilds', '/why-featherbuilds'],
   ['Pricing', '/#pricing'],
   ['About', '/about']
@@ -105,8 +105,8 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
             <span class="knob"></span>
           </button>
 
-          <a href="/#contact" class="hidden md:inline-flex px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
-            Start a Build
+          <a href="/contact" class="hidden md:inline-flex px-4 py-2 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold text-sm hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
+            Start your project
           </a>
 
           <button id="nav-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mnav" class="burger md:hidden text-zinc-900 dark:text-white"><i></i><i></i></button>
@@ -128,7 +128,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
         <p class="mfade mt-5 text-sm text-zinc-500" style={`--i:${links.length + 1}`}>Hand-coded. Feather-light.</p>
            <div class="mfade mt-auto pt-24" style={`--i:${links.length + 2}`}>
           <div class="relative">
-            <a href="/#contact" class="mcta relative z-10 flex justify-center rounded-full bg-emerald-500 dark:bg-emerald-400 py-4 text-lg font-bold text-zinc-950">Start a Build</a>
+            <a href="/contact" class="mcta relative z-10 flex justify-center rounded-full bg-emerald-500 dark:bg-emerald-400 py-4 text-lg font-bold text-zinc-950">Start a Build</a>
           </div>
         </div>
       </nav>

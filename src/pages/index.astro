@@ -27,15 +27,58 @@ const steps = [
   { n: '03', t: 'Launch, then relax', d: 'I take it live. Edit it yourself anytime using an easy to use studio.' }
 ];
 */
+const extraPage = '$150';          // TODO: confirm price per extra page after five
+const monthlyChanges = 2;          // TODO: confirm how many small changes per month you include
+
+const plans = [
+  {
+    name: 'Monthly',
+    badge: 'Recommended',
+    featured: true,
+    blurb: 'One predictable payment. I handle the rest.',
+    price: '$200',
+    unit: '/ month',
+    note: 'No build fee. Billed monthly, 12-month minimum.',
+    cta: 'Start your project',
+    href: '/contact?plan=monthly',
+    points: [
+      'Custom design and build included',
+      'Managed hosting, security and backups',
+      'Edit Studio included: edit text, photos, events and blog posts yourself',
+      `Plus up to ${monthlyChanges} small changes a month from me (text, images or minor tweaks)`,
+      'After month 12 you can leave and take your site with you' // TODO: confirm handover terms
+    ]
+  },
+  {
+    name: 'One-time build',
+    featured: false,
+    blurb: 'Pay for the build once and own the site outright.',
+    price: '$3,500',
+    unit: 'one time',
+    note: 'Plus $50 / month for hosting and care.',
+    cta: 'Start your project',
+    href: '/contact?plan=one-time',
+    points: [
+      'Custom design and build',
+      'You own the code, design and content',
+      'Hosting and care at $50 / month: required for year 1, optional after',
+      'Edit Studio included: edit text, photos, events and blog posts yourself',
+      'Changes made by me are billed hourly'
+    ]
+  }
+];
+
 const included = [
   { t: 'Designed and coded by hand', d: 'Every layout is built around your brand. No templates, no page builders.' },
-  { t: 'Fast, secure hosting', d: 'Custom-built pages on a global edge network, with no plugins exposed to attack.' },
+  { t: 'Managed hosting', d: 'I set up and look after your domain, hosting, security, backups and uptime, so you never log into a hosting account.' },
   { t: 'SEO foundations', d: 'Clean markup, fast Core Web Vitals and metadata done properly.' },
-  { t: 'Edit it yourself', d: 'Update text, photos and events yourself whenever you like.' },
-  { t: 'Built for mobile first', d: 'Tested on real phones so customers get the information without pinching.' },
-  { t: 'Support from the owner', d: 'Call or text and you reach the person who built your site.' 
-  },  
+  { t: 'Edit it yourself', d: 'Update text, photos, events and blog posts in a simple studio, whenever you like.' },
+  { t: 'Built mobile first', d: 'Tested on real phones so customers get the information without pinching.' },
+  { t: 'Support from the owner', d: 'Call or text and you reach the person who built your site.' }
 ];
+const label =
+  "inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300 before:h-px before:w-8 before:bg-current before:opacity-60 after:h-px after:w-8 after:bg-current after:opacity-60";
+  
 const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-hidden="true">
   <g class="bird-head">
     <path class="bird-crest" d="M30 19q-3-8 2-10M37 17q0-9 5-10M43 19q4-6 8-5"/>
@@ -88,12 +131,12 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
        <!-- VALUE -->
       <section id="value" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
         <div class="max-w-3xl mx-auto text-center">
-  <p class="text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300">What we do</p>
+  <p class={label}>What I do</p>
   <h2 class="mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
     Never worry about your website again.
   </h2>
   <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[62ch]">
-    We craft custom, high-speed websites for businesses that want to stand out online instead of looking like a vibe-coded template. By writing clean, modern code from scratch—instead of relying on sluggish templates or page builders—we deliver studio-grade design that loads instantaneously and helps you rank higher on Google. And once you launch, you’re always in control—upload images, update products, or post new events yourself in seconds without touching code.
+    Your website is the first impression of your business. I hand-code every site from scratch so it feels like you: your style, your personality, the experience you want customers to walk into.
   </p>
 </div>
 
@@ -210,7 +253,7 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
       <!-- APPROACH -->
       <section id="process" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
         <div class="max-w-2xl mx-auto text-center">
-        <p class="text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300">Our process</p>
+        <p class={label}>How I work</p>
         <h2 class="mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
           Light on your time, start to finish.
         </h2>
@@ -237,44 +280,87 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
         
 
      <!-- PRICING -->
+
 <section id="pricing" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
   <div class="max-w-2xl mx-auto text-center">
-    <p class="text-sm font-semibold tracking-wide text-emerald-700 dark:text-emerald-300">Pricing</p>
+    <p class={label}>Pricing</p>
     <h2 class="mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
-      One plan. Everything included.
+      Two ways to work together.
     </h2>
+    <p class="mt-5 mx-auto text-lg leading-relaxed text-zinc-700 dark:text-zinc-300 max-w-[56ch]">
+      Both include everything below, managed hosting included. Choose how you’d like to pay.
+    </p>
   </div>
 
-        <div data-perch="3" class="mt-12 rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70 backdrop-blur-md grid lg:grid-cols-12 overflow-hidden">
-          <div class="lg:col-span-5 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-zinc-200/80 dark:border-white/10 bg-emerald-500/[0.06]">
-            <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Starting at</p>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span class="font-display text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white">$200</span>
-              <span class="text-lg text-zinc-600 dark:text-zinc-400">/ month</span>
-            </div>
-            <!-- TODO: add your build fee amount here if you want to state it -->
-            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">plus a small one-time build fee</p>
-            <p class="mt-8 text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
-              Covers a standard five-page small business website. Larger projects are quoted by scope: extra pages, custom features and time involved. 12-month minimum.
-            </p>
-            <a href="#contact" class="mt-8 inline-flex px-7 py-3.5 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold text-base hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors">
-              Start a Build
-            </a>
-          </div>
+  <div class="mt-14 grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto items-stretch">
+    {plans.map((p) => (
+      <div
+        data-perch="3"
+        data-bird
+        class:list={[
+          'relative flex flex-col rounded-3xl border backdrop-blur-md p-8 md:p-10',
+          p.featured
+            ? 'border-emerald-500/50 bg-white/90 dark:bg-zinc-900/80 shadow-[0_0_40px_-12px_rgba(16,185,129,0.5)]'
+            : 'border-zinc-200/80 dark:border-white/10 bg-white/85 dark:bg-zinc-900/70'
+        ]}
+      >
+        {p.badge && (
+          <span class="absolute -top-3 left-8 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-zinc-950">{p.badge}</span>
+        )}
+        <h3 class="font-display text-2xl font-extrabold tracking-tight text-zinc-950 dark:text-white">{p.name}</h3>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{p.blurb}</p>
 
-          <ul class="lg:col-span-7 p-8 md:p-12 grid sm:grid-cols-2 gap-x-10 gap-y-8">
-            {included.map((i) => (
-              <li class="flex gap-3">
-                <svg class="w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
-                <div>
-                  <div class="font-semibold text-zinc-950 dark:text-white">{i.t}</div>
-                  <p class="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{i.d}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div class="mt-6 flex items-baseline gap-2">
+          <span class="font-display text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white">{p.price}</span>
+          <span class="text-lg text-zinc-600 dark:text-zinc-400">{p.unit}</span>
         </div>
-      </section>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{p.note}</p>
+
+        <ul class="mt-8 space-y-3.5">
+          {p.points.map((pt) => (
+            <li class="flex gap-3 text-zinc-700 dark:text-zinc-300">
+              <svg class="w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+              <span>{pt}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-auto pt-10">
+          <a
+            href={p.href}
+            class:list={[
+              'inline-flex w-full justify-center px-7 py-3.5 rounded-full font-bold text-base transition-colors',
+              p.featured
+                ? 'bg-emerald-500 dark:bg-emerald-400 text-zinc-950 hover:bg-emerald-400 dark:hover:bg-emerald-300'
+                : 'border border-zinc-300 dark:border-white/20 text-zinc-900 dark:text-white hover:bg-zinc-900/5 dark:hover:bg-white/10'
+            ]}
+          >
+            {p.cta}
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <p class="mt-6 mx-auto max-w-3xl text-center text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+  Both plans cover a standard five-page small business site with a simple blog or news feed, two rounds of design feedback, and your domain registered in your name (billed at cost). You provide the text and photos. Extra pages are {extraPage} each. Larger projects and custom features are quoted by scope.
+</p>
+
+  <div class="mt-16 max-w-5xl mx-auto">
+    <h3 class="text-center font-display text-xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Every site includes</h3>
+    <ul class="mt-8 grid sm:grid-cols-2 gap-x-10 gap-y-6">
+      {included.map((i) => (
+        <li class="flex gap-3">
+          <svg class="w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+          <div>
+            <div class="font-semibold text-zinc-950 dark:text-white">{i.t}</div>
+            <p class="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{i.d}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
 
       <!-- CONTACT -->
       <section id="contact" class="max-w-7xl mx-auto px-6 pb-24 md:pb-32 scroll-mt-28">
@@ -284,9 +370,9 @@ const bird = `<svg class="peek" viewBox="0 0 72 52" width="72" height="52" aria-
           </h2>
           <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300 max-w-xl mx-auto">Send a few lines about what you do and what you need. You will hear back from the person who builds your site.</p>
           <!-- TODO: replace with your real email -->
-          <a href="mailto:hello@example.com" class="mt-8 inline-flex px-8 py-4 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
-            Email me
-          </a>
+          <a href="/contact" class="mt-8 inline-flex px-8 py-4 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold hover:bg-emerald-500 dark:hover:bg-emerald-400 hover:text-zinc-950 transition-colors">
+  Contact Me
+</a>
         </div>
       </section>
 <script is:inline>

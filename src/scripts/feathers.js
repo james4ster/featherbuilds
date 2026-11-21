@@ -703,71 +703,83 @@
       if (!f.slot) f.arc = rand(8, 30);
       f.tx = f.x < W / 2 ? -90 : W + 90; f.ty = f.y + rand(H * 0.2, H * 0.5);
     }
-    function updateFeathers(dt) {
-      const mouseLive = performance.now() - mouse.t < 90;
-      for (let i = feathers.length - 1; i >= 0; i--) {
-        const f = feathers[i];
-        if (f.state === 'drift') {
-          f.t += dt / f.T;
-          const t = Math.min(f.t, 1), e = easeInOut(t);
-          let r = f.slot ? rects.get(f.slot.el) : null;
-          if (f.slot && !r) { f.slot = null; f.tx = f.x; f.ty = H + 80; }
-          let x2, y2;
-          if (f.slot) { x2 = r.left + f.slot.fx * r.width; y2 = r.top - 6 - f.slot.stack * 1.7; }
-          else { x2 = f.tx; y2 = f.ty; }
-          const cx = (f.x0 + x2) / 2 + f.drift, cy = Math.min(f.y0, y2) - f.arc;
-          const q = 1 - e;
-          const damp = Math.pow(1 - e, 1.1);
-          f.x = q * q * f.x0 + 2 * q * e * cx + e * e * x2 + Math.sin(f.phase + t * f.freq * TAU) * f.amp * damp;
-          f.y = q * q * f.y0 + 2 * q * e * cy + e * e * y2 + Math.cos(f.phase * 1.3 + t * f.freq * TAU * 1.4) * 5 * damp;
-          f.depth = lerp(f.d0, 1, e);
-          const settle = smooth(0.84, 1, t);
-          const flutter = Math.sin(f.phase * 0.7 + t * TAU * 1.5) * 0.75 * (1 - e * 0.7) + f.flipAng;
-          f.angle = lerp(flutter, f.restAngle, settle);
-          f.tilt = lerp(0.3 + 0.7 * Math.abs(Math.cos(f.phase + t * TAU * 2.1)), 1, settle);
-          if (f.t >= 1) {
-            if (f.slot) { f.state = 'rest'; f.landedAt = clock; f.angle = f.restAngle; f.tilt = 1; f.depth = 1; }
-            else feathers.splice(i, 1);
-          }
-        } else {
-          if (f.slot) {
-            const r = rects.get(f.slot.el);
-            if (r) {
-              const tx = r.left + f.slot.fx * r.width, ty = r.top - 6 - f.slot.stack * 1.7;
-              const vy = ty - f.y, k = Math.min(1, dt * 12);
-              f.x += (tx - f.x) * k; f.y += vy * k;
-              if (Math.abs(vy) > 300) { f.x = tx; f.y = ty; }
-              f.sway = (f.sway || 0) + (clamp(vy * 0.012, -0.6, 0.6) - (f.sway || 0)) * Math.min(1, dt * 10);
-            }
-            else if (f.state === 'rest') f.state = 'fade';
-          }
-          if (f.state === 'fade') {
-            f.alpha -= dt / 1.4;
-            if (f.alpha <= 0) { feathers.splice(i, 1); continue; }
-          } else if (mouseLive && clock - f.landedAt > 1 && Math.hypot(f.x - mouse.x, f.y - mouse.y) < 52) {
-            blow(f);
-          }
-        }
+    function fall(f) {
+  f.state = 'fall'; f.slot = null; f.t = 0;
+  f.vy = rand(20, 60); f.vx = rand(-30, 30); f.phase = rand(0, TAU);
+}
+function updateFeathers(dt) {
+  const mouseLive = performance.now() - mouse.t < 90;
+  for (let i = feathers.length - 1; i >= 0; i--) {
+    const f = feathers[i];
+    if (f.state === 'drift') {
+      f.t += dt / f.T;
+      const t = Math.min(f.t, 1), e = easeInOut(t);
+      let r = f.slot ? rects.get(f.slot.el) : null;
+      if (f.slot && !r) { f.slot = null; f.tx = f.x; f.ty = H + 80; }
+      let x2, y2;
+      if (f.slot) { x2 = r.left + f.slot.fx * r.width; y2 = r.top - 6 - f.slot.stack * 1.7; }
+      else { x2 = f.tx; y2 = f.ty; }
+      const cx = (f.x0 + x2) / 2 + f.drift, cy = Math.min(f.y0, y2) - f.arc;
+      const q = 1 - e;
+      const damp = Math.pow(1 - e, 1.1);
+      f.x = q * q * f.x0 + 2 * q * e * cx + e * e * x2 + Math.sin(f.phase + t * f.freq * TAU) * f.amp * damp;
+      f.y = q * q * f.y0 + 2 * q * e * cy + e * e * y2 + Math.cos(f.phase * 1.3 + t * f.freq * TAU * 1.4) * 5 * damp;
+      f.depth = lerp(f.d0, 1, e);
+      const settle = smooth(0.84, 1, t);
+      const flutter = Math.sin(f.phase * 0.7 + t * TAU * 1.5) * 0.75 * (1 - e * 0.7) + f.flipAng;
+      f.angle = lerp(flutter, f.restAngle, settle);
+      f.tilt = lerp(0.3 + 0.7 * Math.abs(Math.cos(f.phase + t * TAU * 2.1)), 1, settle);
+      if (f.t >= 1) {
+        if (f.slot) { f.state = 'rest'; f.landedAt = clock; f.angle = f.restAngle; f.tilt = 1; f.depth = 1; f.ly = undefined; }
+        else feathers.splice(i, 1);
+      }
+    } else if (f.state === 'fall') {
+      f.t += dt;
+      f.vy = Math.min(f.vy + 240 * dt, 170);
+      f.x += (f.vx + Math.sin(f.phase + f.t * 3) * 55) * dt;
+      f.y += f.vy * dt;
+      f.angle = Math.sin(f.phase + f.t * 3) * 0.9;
+      f.tilt = 0.3 + 0.7 * Math.abs(Math.cos(f.phase + f.t * 2.4));
+      if (f.y > H + 60) feathers.splice(i, 1);
+    } else {
+      if (f.slot) {
+        const r = rects.get(f.slot.el);
+        if (r) {
+          const tx = r.left + f.slot.fx * r.width, ty = r.top - 6 - f.slot.stack * 1.7;
+          const moved = f.ly === undefined ? 0 : ty - f.ly;
+          f.ly = ty;
+          if (f.state === 'rest' && moved < -1.5) { fall(f); continue; }
+          f.x = tx; f.y = ty;
+        } else if (f.state === 'rest') f.state = 'fade';
+      }
+      if (f.state === 'fade') {
+        f.alpha -= dt / 1.4;
+        if (f.alpha <= 0) { feathers.splice(i, 1); continue; }
+      } else if (mouseLive && clock - f.landedAt > 1 && Math.hypot(f.x - mouse.x, f.y - mouse.y) < 52) {
+        blow(f);
       }
     }
-    function drawFeather(f, dark) {
-      if (f.state !== 'drift' && f.y < headerBottom + 2) return;
-      if (f.y > H + 60 || navOpen) return;
-      const sp = featherSprites[f.sprite];
-      if (!sp) return;
-      const sz = 0.95 * f.depth;
-      fg.save();
-      fg.globalAlpha = f.alpha * (0.4 + 0.6 * f.depth);
-      fg.translate(f.x, f.y);
-      if (f.state !== 'drift' && !dark) {
-        fg.fillStyle = 'rgba(6,78,59,0.14)';
-        fg.beginPath(); fg.ellipse(0, 4, 22 * sz, 2.4, 0, 0, TAU); fg.fill();
-      }
-      fg.rotate(f.angle + (f.state === 'drift' ? 0 : (f.sway || 0) + Math.sin(clock * 16) * Math.min(0.25, Math.abs(f.sway || 0))));
-      fg.scale(sz * f.flip, sz * f.tilt);
-      fg.drawImage(sp, -32, -14, 64, 28);
-      fg.restore();
-    }
+  }
+}
+function drawFeather(f, dark) {
+  const resting = f.state === 'rest' || f.state === 'fade';
+  if (resting && f.y < headerBottom + 2) return;
+  if (f.y > H + 60 || navOpen) return;
+  const sp = featherSprites[f.sprite];
+  if (!sp) return;
+  const sz = 0.95 * f.depth;
+  fg.save();
+  fg.globalAlpha = f.alpha * (0.4 + 0.6 * f.depth);
+  fg.translate(f.x, f.y);
+  if (resting && !dark) {
+    fg.fillStyle = 'rgba(6,78,59,0.14)';
+    fg.beginPath(); fg.ellipse(0, 4, 22 * sz, 2.4, 0, 0, TAU); fg.fill();
+  }
+  fg.rotate(f.angle);
+  fg.scale(sz * f.flip, sz * f.tilt);
+  fg.drawImage(sp, -32, -14, 64, 28);
+  fg.restore();
+}
 
     /* =====================================================
        FRAME

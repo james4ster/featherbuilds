@@ -1,0 +1,255 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const formEndpoint = 'https://api.web3forms.com/submit';   // TODO: or Formspree / your own endpoint
+const accessKey = 'b13bb4b8-ac50-4e2d-89bb-0a9db3a6f285';                       // TODO: key from your form service
+
+const field =
+  'mt-1.5 w-full rounded-lg border border-zinc-300/60 dark:border-white/10 bg-white/80 dark:bg-zinc-950/50 px-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30';
+const lab = 'block text-sm font-semibold text-zinc-900 dark:text-zinc-100';
+
+const owner = [
+  'You talk directly to the developer.',
+  'I design your site.',
+  'I write every line of code.',
+  'I support you after launch.'
+];
+
+const next = [
+  'I read your message and reply - usually within 24 hours.',
+  'We agree on scope and a plan.',
+  'I design, build and launch your site.'
+];
+---
+
+<Layout
+  title="Contact FeatherBuilds | Start Your Project"
+  description="Tell me about your business and what you need from a website. You deal with one person from the first call to long after launch."
+>
+  <section class="max-w-7xl mx-auto px-6 pt-20 pb-24 md:pt-28 md:pb-32">
+    <div class="grid lg:grid-cols-[1fr_minmax(0,34rem)] gap-14 lg:gap-20 items-start">
+
+      <!-- LEFT -->
+      <div>
+        <h1 data-bird="text" class="mt-4 font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.08] text-zinc-950 dark:text-white">
+          Tell me about your business.
+        </h1>
+        <p class="mt-5 max-w-[48ch] text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+          Send a few lines about what you do and what you need. There is no sales team and no handoff. You talk to the person who builds your site, from the first message to long after launch.
+        </p>
+
+        <div class="mt-10 rounded-2xl border border-zinc-200/80 dark:border-white/10 bg-white/90 dark:bg-zinc-900/70 backdrop-blur-md p-6">
+          <h2 class="font-display text-xl font-extrabold tracking-tight text-zinc-950 dark:text-white">One person. Start to finish.</h2>
+          <ul class="mt-4 space-y-3">
+            {owner.map((o) => (
+              <li class="flex gap-3 text-zinc-700 dark:text-zinc-300">
+                <svg class="w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                <span>{o}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="mt-10 rounded-2xl border border-zinc-200/80 dark:border-white/10 bg-white/90 dark:bg-zinc-900/70 backdrop-blur-md p-6">
+  <h2 class="font-display text-xl font-extrabold tracking-tight text-zinc-950 dark:text-white">What happens next</h2>
+  <ol class="mt-4 space-y-3">
+    {next.map((n, idx) => (
+      <li class="flex gap-3 text-zinc-800 dark:text-zinc-300">
+        <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-600 text-xs font-bold text-white dark:bg-emerald-500/20 dark:text-emerald-300">{idx + 1}</span>
+        <span>{n}</span>
+      </li>
+    ))}
+  </ol>
+</div>
+      </div>
+
+      <!-- RIGHT: form card with the nest on top -->
+      <div data-occlude class="relative mt-24 lg:mt-0 rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/90 dark:bg-zinc-900/80 backdrop-blur-md p-8 md:p-10">
+
+        <svg class="nest pointer-events-none absolute bottom-full right-8 sm:right-12 w-36 translate-y-[7px] overflow-visible" viewBox="0 0 140 92" aria-hidden="true">
+          <defs>
+            <clipPath id="nest-clip"><path d="M8 55Q70 47 132 55Q130 85 70 89Q10 85 8 55Z" /></clipPath>
+            <linearGradient id="nest-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" style="stop-color:var(--n-top)" /><stop offset="1" style="stop-color:var(--n-bot)" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="70" cy="55" rx="62" ry="7" fill="var(--n-inner)" />
+          <g transform="translate(34 2)">
+            <g class="bird-head">
+              <path class="bird-crest" d="M30 19q-3-8 2-10M37 17q0-9 5-10M43 19q4-6 8-5" />
+              <circle class="bird-body" cx="36" cy="40" r="22" />
+              <ellipse class="bird-belly" cx="36" cy="52" rx="14" ry="8" />
+              <circle class="bird-blush" cx="19" cy="42" r="4" />
+              <circle class="bird-blush" cx="53" cy="42" r="4" />
+              <g class="nest-eyes">
+                <circle class="eye-w" cx="27" cy="35" r="6.2" /><circle class="eye-w" cx="45" cy="35" r="6.2" />
+                <circle class="eye-p" cx="28.2" cy="34" r="3.4" /><circle class="eye-p" cx="46.2" cy="34" r="3.4" />
+                <circle class="eye-h" cx="29.4" cy="32.6" r="1.3" /><circle class="eye-h" cx="47.4" cy="32.6" r="1.3" />
+              </g>
+              <rect x="33.3" y="43" width="5.4" height="2.8" fill="#04271e" />
+              <path class="bird-beak" d="M32.5 41h7l-1 2.6h-5z" />
+              <path class="bird-beak nest-jaw" d="M33.5 43.6h5l-2.5 3.9z" />
+            </g>
+          </g>
+          <path d="M8 55Q70 47 132 55Q130 85 70 89Q10 85 8 55Z" fill="url(#nest-grad)" />
+          <g clip-path="url(#nest-clip)" class="nest-weave">
+            <path class="st-d" d="M21 57Q60 71 99 71M26 68Q74 69 122 54M53 72Q77 75 101 63M49 75Q82 92 116 90M39 77Q84 83 128 74M38 56Q59 63 81 62M35 72Q58 74 81 68M47 84Q71 95 95 89M46 88Q83 76 119 46M47 71Q82 71 117 65M39 77Q63 87 87 86M29 81Q60 66 90 44M36 60Q65 65 94 60M54 60Q83 67 112 63M30 81Q76 85 122 71M43 109Q75 92 107 59M33 56Q60 58 88 56M25 82Q62 97 99 91M47 75Q82 95 117 95M38 69Q77 75 116 68M53 99Q84 92 114 71M33 59Q71 60 108 52" />
+            <path class="st-m" d="M42 76Q62 64 83 42M39 46Q81 58 124 64M38 85Q58 80 77 65M42 72Q80 98 118 102M56 98Q77 88 98 65M53 80Q79 92 105 87M33 90Q67 94 102 83M23 57Q65 63 106 63M19 84Q57 71 95 41M39 65Q67 81 96 85M33 55Q80 60 126 57M48 84Q70 74 92 55M38 54Q65 60 92 54M43 62Q79 59 116 51M34 68Q75 69 115 57M30 72Q79 74 128 66M46 49Q81 75 116 93M36 54Q70 60 103 52M35 56Q66 68 97 70M22 63Q64 72 106 67M45 46Q72 68 98 81M36 64Q63 61 89 48M28 77Q74 80 119 64M44 77Q77 86 111 74M44 66Q83 74 122 72M37 91Q75 68 113 33" />
+            <path class="st-l" d="M46 57Q68 57 90 52M37 65Q60 67 84 61M45 86Q74 80 102 61M39 65Q72 71 106 63M26 84Q72 88 118 75M58 71Q80 75 102 62M42 72Q83 81 123 74M37 54Q60 56 83 52M17 71Q60 87 104 92M51 54Q81 66 112 62M27 82Q61 88 95 80M30 85Q72 78 113 58M30 67Q77 80 124 79M42 77Q75 80 108 65M27 87Q63 93 100 85M46 57Q68 65 91 57M46 79Q68 87 90 75M58 53Q80 64 102 58M43 56Q63 57 83 51M59 68Q82 76 105 71M26 78Q75 79 124 63M12 71Q57 84 102 80M26 92Q60 90 94 71M42 87Q77 87 112 75M30 56Q69 74 109 77M40 28Q77 60 114 78M46 69Q70 69 95 55M41 71Q65 81 88 80M42 62Q83 67 124 61" />
+            <path class="st-h" d="M37 55Q72 65 107 68M37 61Q68 67 98 65M38 47Q66 68 93 76M18 58Q62 73 106 71M49 78Q83 88 116 77M35 65Q62 74 89 67M31 60Q74 78 117 80M44 78Q69 87 95 80M44 55Q83 58 123 52M42 38Q76 62 110 79M41 50Q73 69 106 79M44 66Q69 70 93 60M42 71Q63 87 84 86M46 67Q69 73 93 71M14 55Q59 58 104 55M38 81Q67 76 95 62M61 77Q80 91 100 89M25 65Q56 79 87 82M25 62Q60 64 96 52" />
+          </g>
+          <path class="nest-edge" d="M8 55Q70 47 132 55Q130 85 70 89Q10 85 8 55Z" />
+          <g class="nest-rim">
+            <path class="r-dark" d="M78 55Q88 54 98 57M26 55Q44 53 62 57M28 54Q44 54 59 58M24 55Q34 55 45 57M20 55Q32 54 44 58M10 57Q18 57 27 60M83 56Q101 53 119 55M105 52Q120 51 134 54M44 53Q56 49 67 50M42 52Q60 52 77 56M43 56Q59 53 75 56M55 56Q67 53 79 54M101 54Q109 54 117 57M8 55Q17 54 25 59M85 53Q102 51 119 52M71 55Q81 52 92 54M4 60Q20 60 36 61M7 57Q17 58 27 61M46 54Q56 53 67 54M24 57Q40 57 56 60M70 53Q81 51 92 52M13 58Q23 55 32 57M8 57Q21 57 35 60M111 53Q121 50 132 51M81 52Q93 50 106 52M77 55Q92 53 108 57M95 54Q106 53 117 54M26 54Q36 52 46 52M66 53Q78 53 89 57M29 56Q45 55 61 60" />
+            <path class="r-light" d="M78 55Q88 54 98 57M26 55Q44 53 62 57M28 54Q44 54 59 58M24 55Q34 55 45 57M20 55Q32 54 44 58M10 57Q18 57 27 60M83 56Q101 53 119 55M105 52Q120 51 134 54M44 53Q56 49 67 50M42 52Q60 52 77 56M43 56Q59 53 75 56M55 56Q67 53 79 54M101 54Q109 54 117 57M8 55Q17 54 25 59M85 53Q102 51 119 52M71 55Q81 52 92 54M4 60Q20 60 36 61M7 57Q17 58 27 61M46 54Q56 53 67 54M24 57Q40 57 56 60M70 53Q81 51 92 52M13 58Q23 55 32 57M8 57Q21 57 35 60M111 53Q121 50 132 51M81 52Q93 50 106 52M77 55Q92 53 108 57M95 54Q106 53 117 54M26 54Q36 52 46 52M66 53Q78 53 89 57M29 56Q45 55 61 60" />
+            <path class="wisp" d="M132 54Q136 47 142 47M111 53Q116 42 122 43M6 55Q1 47 -7 48M129 57Q131 47 135 48M111 55Q114 49 118 50M105 57Q111 46 119 47M117 55Q121 50 128 51M11 56Q8 51 4 51M125 54Q129 44 136 45M126 55Q130 48 135 49M26 56Q22 48 17 49M103 63Q102 71 97 77M41 55Q46 63 40 69M60 62Q60 70 53 72M74 60Q79 68 66 73M57 59Q53 67 53 72" />
+          </g>
+        </svg>
+
+        <div id="c-form-wrap">
+          <h2 class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Send me a message</h2>
+
+          <form id="c-form" class="mt-6 space-y-5" action={formEndpoint} method="POST" data-endpoint={formEndpoint}>
+            <input type="hidden" name="access_key" value={accessKey} />
+            <input type="hidden" name="subject" value="New FeatherBuilds inquiry" />
+            <input type="hidden" name="from_name" value="FeatherBuilds website" />
+            <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+
+            <div>
+              <label for="c-name" class={lab}>Name</label>
+              <input id="c-name" name="name" type="text" required autocomplete="name" placeholder="Your name" class={`${field} h-11`} />
+            </div>
+            <div>
+              <label for="c-email" class={lab}>Email</label>
+              <input id="c-email" name="email" type="email" required autocomplete="email" placeholder="you@yourbusiness.com" class={`${field} h-11`} />
+            </div>
+            <div>
+              <label for="c-business" class={lab}>Business name <span class="font-normal text-zinc-500">(optional)</span></label>
+              <input id="c-business" name="business" type="text" autocomplete="organization" placeholder="Your business" class={`${field} h-11`} />
+            </div>
+            <div>
+              <label for="c-website" class={lab}>Current website <span class="font-normal text-zinc-500">(optional)</span></label>
+              <input id="c-website" name="website" type="text" inputmode="url" autocomplete="url" placeholder="yourbusiness.com" class={`${field} h-11`} />
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="c-interest" class={lab}>I’m interested in</label>
+                <select id="c-interest" name="interest" class={`${field} h-11`}>
+                  <option value="unsure" selected>Not sure yet</option>
+                  <option value="monthly">Monthly plan</option>
+                  <option value="one-time">One-time build</option>
+                </select>
+              </div>
+              <div>
+                <label for="c-timeline" class={lab}>Ideal launch <span class="font-normal text-zinc-500">(optional)</span></label>
+                <select id="c-timeline" name="timeline" class={`${field} h-11`}>
+                  <option value="not-specified" selected>No set date</option>
+                  <option value="asap">As soon as possible</option>
+                  <option value="1-3-months">Within 1–3 months</option>
+                  <option value="exploring">Just exploring</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label for="c-message" class={lab}>Message</label>
+              <textarea id="c-message" name="message" rows="5" required placeholder="What does your business do, and what do you want from a website?" class={`${field} py-3`}></textarea>
+            </div>
+            <div class="h-captcha" data-captcha="true"></div>
+            <script src="https://web3forms.com/client/script.js" async defer></script>
+
+            <button id="c-send" type="submit" class="w-full rounded-full bg-emerald-500 dark:bg-emerald-400 px-7 py-3.5 text-base font-bold text-zinc-950 hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors disabled:opacity-60">
+              Send message
+            </button>
+            <p id="c-status" role="alert" class="min-h-5 text-sm text-red-600 dark:text-red-400"></p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400">I only use your details to reply to your message.</p>
+          </form>
+        </div>
+
+        <div id="c-done" class="hidden py-10 text-center outline-none" role="status">
+          <span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+          </span>
+          <h2 class="mt-5 font-display text-2xl font-extrabold tracking-tight text-zinc-950 dark:text-white">Message sent.</h2>
+          <p class="mt-2 text-zinc-700 dark:text-zinc-300">Thanks. I’ll be in touch soon.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var form = document.getElementById('c-form');
+      if (!form) return;
+      var wrap = document.getElementById('c-form-wrap');
+      var done = document.getElementById('c-done');
+      var status = document.getElementById('c-status');
+      var btn = document.getElementById('c-send');
+      var sel = document.getElementById('c-interest');
+
+      var plan = new URLSearchParams(location.search).get('plan');
+      if (plan && sel && /^(monthly|one-time|unsure)$/.test(plan)) sel.value = plan;
+
+      function showDone() {
+        wrap.classList.add('hidden');
+        done.classList.remove('hidden');
+        done.setAttribute('tabindex', '-1');
+        done.focus();
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (form.botcheck && form.botcheck.checked) { showDone(); return; }  // bots fill the hidden box
+        status.textContent = '';
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        try {
+          var data = Object.fromEntries(new FormData(form).entries());
+          var res = await fetch(form.dataset.endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(data)
+          });
+          var json = await res.json().catch(function () { return {}; });
+          if (!res.ok || json.success === false) throw new Error('send failed');
+          showDone();
+        } catch (err) {
+          status.textContent = 'Something went wrong sending your message. Please try again in a moment.';
+          btn.disabled = false;
+          btn.textContent = 'Send message';
+        }
+      });
+    })();
+  </script>
+</Layout>
+
+<style>
+  .nest { --n-top: #d9b45a; --n-bot: #8f6a2c; --n-inner: #5b3f17; --n-d: #7a5426; --n-m: #b98a3a; --n-l: #e9cd84; --n-h: #f6e7b0; --n-rimd: #6b4a1c; --n-riml: #e2bf6a; }
+  :global(.dark) .nest { --n-top: #a8863f; --n-bot: #5e4520; --n-inner: #2d1f0a; --n-d: #4d3416; --n-m: #8a6628; --n-l: #b89a55; --n-h: #cdb678; --n-rimd: #3f2b10; --n-riml: #a8863f; }
+
+  .nest-weave path, .nest-rim path { fill: none; stroke-linecap: round; }
+  .st-d { stroke: var(--n-d); stroke-width: 1.1; }
+  .st-m { stroke: var(--n-m); stroke-width: 1.2; }
+  .st-l { stroke: var(--n-l); stroke-width: 1.2; }
+  .st-h { stroke: var(--n-h); stroke-width: 0.9; }
+  .nest-edge { fill: none; stroke: var(--n-rimd); stroke-width: 1; }
+  .r-dark { stroke: var(--n-rimd); stroke-width: 2.3; }
+  .r-light { stroke: var(--n-riml); stroke-width: 1.2; }
+  .wisp { stroke: var(--n-m); stroke-width: 0.9; }
+
+  /* The bird stays put: it only blinks and chirps */
+  .nest-eyes { transform-box: fill-box; transform-origin: center; animation: nest-blink 4.6s ease-in-out infinite; }
+  .nest-jaw { animation: nest-chirp 5.5s ease-in-out infinite; }
+
+  @keyframes nest-blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.08); }
+  }
+  @keyframes nest-chirp {
+    0%, 58%, 66%, 74%, 82%, 100% { transform: translateY(0); }
+    62%, 70%, 78% { transform: translateY(2.4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nest-eyes, .nest-jaw { animation: none; }
+  }
+</style>
