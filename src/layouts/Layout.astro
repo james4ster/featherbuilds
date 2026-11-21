@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import jakartaUrl from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -27,6 +29,8 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 <html lang="en" class="dark scroll-smooth">
   <head>
     <meta charset="utf-8" />
+    <link rel="preload" as="font" type="font/woff2" href={interUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jakartaUrl} crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -140,7 +144,9 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
     <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-[9999]" aria-hidden="true"></canvas>
 
-    <script src="/feathers.js" defer></script>
+    <script>
+  import '../scripts/feathers.js';
+</script>
     <script is:inline>
       (function () {
         if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;

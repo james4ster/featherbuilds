@@ -115,7 +115,7 @@
 
     /* ---------- sizing ---------- */
     function size() {
-      DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+      DPR = Math.min(window.devicePixelRatio || 1, innerWidth < 768 ? 1 : 1.5);
       W = bgCanvas.clientWidth || window.innerWidth;
       H = bgCanvas.clientHeight || window.innerHeight;
       [bgCanvas, fgCanvas].forEach((c) => {
@@ -928,10 +928,6 @@
     }).observe(root, { attributes: true, attributeFilter: ['class'] });
   }
 
-  function start() {
-  if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 2000 });
-  else setTimeout(boot, 300);
-}
-if (document.readyState === 'complete') setTimeout(start, 1500);
-else addEventListener('load', function () { setTimeout(start, 1500); });
+    if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 600 });
+  else setTimeout(boot, 100);
 })();
