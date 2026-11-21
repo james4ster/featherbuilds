@@ -115,7 +115,7 @@
 
     /* ---------- sizing ---------- */
     function size() {
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      DPR = Math.min(window.devicePixelRatio || 1, 1.5);
       W = bgCanvas.clientWidth || window.innerWidth;
       H = bgCanvas.clientHeight || window.innerHeight;
       [bgCanvas, fgCanvas].forEach((c) => {
@@ -928,9 +928,10 @@
     }).observe(root, { attributes: true, attributeFilter: ['class'] });
   }
 
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(boot, { timeout: 1200 });
-  } else {
-    setTimeout(boot, 150);
-  }
+  function start() {
+  if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 2000 });
+  else setTimeout(boot, 300);
+}
+if (document.readyState === 'complete') setTimeout(start, 1500);
+else addEventListener('load', function () { setTimeout(start, 1500); });
 })();
