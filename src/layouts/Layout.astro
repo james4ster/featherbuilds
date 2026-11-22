@@ -20,10 +20,11 @@ const links = [
   ['The Process', '/#process'],
   ['Why FeatherBuilds', '/why-featherbuilds'],
   ['Pricing', '/#pricing'],
-  ['About', '/about']
+  ['About', '/about'],
+  ['Contact', '/contact']
 ];
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-
+const psiUrl = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(origin.href) + '&form_factor=mobile';
 ---
 <!doctype html>
 <html lang="en" class="dark scroll-smooth">
@@ -95,8 +96,8 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400" aria-label="Primary">
-          {links.map(([t, h]) => (
-            <a href={h} aria-current={h === path ? 'page' : undefined} class={`hover:text-zinc-950 dark:hover:text-white transition-colors ${h === path ? 'text-zinc-950 dark:text-white' : ''}`}>{t}</a>
+           {links.map(([t, h]) => (
+            <a href={h} data-nav={h} aria-current={h === path ? 'page' : undefined} class="navlink hover:text-zinc-950 dark:hover:text-white transition-colors">{t}</a>
           ))}
         </nav>
 
@@ -139,8 +140,15 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     </main>
 
     <footer class="relative z-10 border-t border-zinc-200/70 dark:border-white/5 bg-white/70 dark:bg-[#06080a]/70 backdrop-blur-md">
-      <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-zinc-500">© 2026 FeatherBuilds</div>
-    </footer>
+  <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+    <span>© 2026 FeatherBuilds</span>
+    <a href={psiUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-zinc-950 dark:hover:text-white transition-colors">
+      <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 14l4-4"/><path d="M3.3 17a9 9 0 1 1 17.4 0"/></svg>
+      Test this site's speed on Google PageSpeed
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</footer>
 
     <canvas id="feather-canvas" class="fixed top-0 left-0 w-full h-lvh pointer-events-none z-[9999]" aria-hidden="true"></canvas>
 
@@ -170,6 +178,33 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
         m.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
         addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
         matchMedia('(min-width:768px)').addEventListener('change', function (e) { if (e.matches) set(false); });
+      })();
+
+            (function () {
+        if ((location.pathname.replace(/\/$/, '') || '/') !== '/' || !('IntersectionObserver' in window)) return;
+        var links = [].slice.call(document.querySelectorAll('#site-header a[data-nav^="/#"]'));
+        if (!links.length) return;
+        var map = {}, live = {}, lock = 0;
+        links.forEach(function (a) { map[a.getAttribute('data-nav').slice(2)] = a; });
+        var ids = Object.keys(map);
+        function set(id) {
+          links.forEach(function (a) {
+            if (a === map[id]) a.setAttribute('aria-current', 'location');
+            else a.removeAttribute('aria-current');
+          });
+        }
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { live[e.target.id] = e.isIntersecting; });
+          if (Date.now() < lock) return;
+          var active = null;
+          ids.forEach(function (id) { if (live[id]) active = id; });
+          if (!active && window.scrollY > 300) return;   // keep the last one through gaps between sections
+          set(active);
+        }, { rootMargin: '-30% 0px -50% 0px' });
+        ids.forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
+        links.forEach(function (a) {
+          a.addEventListener('click', function () { lock = Date.now() + 900; set(a.getAttribute('data-nav').slice(2)); });
+        });
       })();
     </script>
   </body>

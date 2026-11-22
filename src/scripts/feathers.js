@@ -54,7 +54,7 @@
       });
       if (!cands.length) return null;
       const el = cands[Math.floor(Math.random() * cands.length)];
-      const fx = el.dataset.bird === 'text' ? (Math.random() < 0.5 ? rand(0.1, 0.3) : rand(0.7, 0.9)) : rand(0.2, 0.8);
+            const fx = el.dataset.bird === 'text' ? tallLetterFx(el) : rand(0.2, 0.8);
       return { el: el, fx: fx };
     }
     function perchRect(el) {
@@ -68,6 +68,37 @@
       return { left: left, right: right, top: top + (parseFloat(getComputedStyle(el).fontSize) || 16) * 0.3, width: right - left };
     }
 
+        // Text perches: stand on a tall letter (capitals and b d f h k l t) so the feet touch glyphs, not the gap above short ones
+    function tallLetterFx(el) {
+      const fallback = Math.random() < 0.5 ? rand(0.1, 0.3) : rand(0.7, 0.9);
+      const base = perchRect(el);
+      if (!base.width) return fallback;
+      const tall = /[A-Zbdfhklt]/;
+      const spots = [];
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const rg = document.createRange();
+      let firstTop = null, node;
+      outer: while ((node = walker.nextNode())) {
+        const s = node.nodeValue;
+        for (let i = 0; i < s.length; i++) {
+          rg.setStart(node, i); rg.setEnd(node, i + 1);
+          const r = rg.getBoundingClientRect();
+          if (!r.width) continue;
+          if (firstTop === null) firstTop = r.top;
+          if (r.top > firstTop + 6) break outer;          // reached the second line
+          if (tall.test(s[i])) {
+            const fx = (r.left + r.width / 2 - base.left) / base.width;
+            if (fx > 0.05 && fx < 0.95) spots.push(fx);
+          }
+        }
+      }
+            if (!spots.length) return fallback;
+      const far = spots.filter((f) => Math.abs(f - lastTextFx) > 0.1);
+      const pool = far.length ? far : spots;
+      lastTextFx = pool[Math.floor(Math.random() * pool.length)];
+      return lastTextFx;
+    }
+
     /* ---------- state ---------- */
     let W = 0, H = 0, DPR = 1;
     let clock = 0, builtDark = null;
@@ -75,6 +106,7 @@
     let peaks = [], twinkles = [], fireflies = [], clouds = [];
     let featherSprites = [], fireflySprite = null, cloudSprite = null;
     let bird = null, nextBirdAt = 1.4;
+    let lastTextFx = -1;
     let shoot = null, nextShootAt = 14;
     const feathers = [];
     const MAX_FEATHERS = 14;

@@ -76,6 +76,9 @@ const label =
   "inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300 before:h-px before:w-8 before:bg-current before:opacity-60 after:h-px after:w-8 after:bg-current after:opacity-60";
 const h2 =
   "mt-3 font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white";
+
+const site = Astro.site?.href ?? Astro.url.origin;
+const psi = (form) => 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(site) + '&form_factor=' + form;
 ---
 
 <Layout
@@ -167,8 +170,7 @@ const h2 =
       </div>
     </div>
     <p class="mt-5 text-sm text-zinc-600 dark:text-zinc-400">
-      Also: photos, staff bios, FAQs, pricing, announcements, SEO titles. If
-      it’s on your site, you can change it.
+      Also: photos, staff bios, FAQs, pricing, announcements, SEO titles, etc.
     </p>
   </section>
 
@@ -247,9 +249,12 @@ const h2 =
         </div>
       </div>
     </div>
-    <p class="mt-3 text-center text-xs text-zinc-500">
-      Illustrative. Run PageSpeed on any site to see its real numbers.
-    </p>
+    <div class="mt-8 flex flex-col items-center gap-3">
+  <a href={psi('mobile')} target="_blank" rel="noopener" class="inline-flex px-7 py-3.5 rounded-full bg-emerald-500 dark:bg-emerald-400 text-zinc-950 font-bold hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors">
+    Test this site live on Google PageSpeed
+  </a>
+  <p class="text-xs text-zinc-600 dark:text-zinc-400">Opens Google's own tool and takes about 30 seconds. The demo above is illustrative. This test isn't.</p>
+</div>
 
     <ul class="mt-14 grid sm:grid-cols-2 gap-x-10 gap-y-6 max-w-4xl mx-auto">
       {facts.map(([t, d]) => (

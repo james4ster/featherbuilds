@@ -9,7 +9,7 @@ const field =
 const lab = 'block text-sm font-semibold text-zinc-900 dark:text-zinc-100';
 
 const owner = [
-  'You talk directly to the developer.',
+  'You talk directly to the owner and developer.',
   'I design your site.',
   'I write every line of code.',
   'I support you after launch.'
@@ -38,7 +38,7 @@ const next = [
           Send a few lines about what you do and what you need. There is no sales team and no handoff. You talk to the person who builds your site, from the first message to long after launch.
         </p>
 
-        <div class="mt-10 rounded-2xl border border-zinc-200/80 dark:border-white/10 bg-white/90 dark:bg-zinc-900/70 backdrop-blur-md p-6">
+        <div data-bird data-perch="2" class="mt-10 rounded-2xl border border-zinc-200/80 dark:border-white/10 bg-white/90 dark:bg-zinc-900/70 backdrop-blur-md p-6">
           <h2 class="font-display text-xl font-extrabold tracking-tight text-zinc-950 dark:text-white">One person. Start to finish.</h2>
           <ul class="mt-4 space-y-3">
             {owner.map((o) => (
@@ -157,7 +157,7 @@ const next = [
             <div class="h-captcha" data-captcha="true"></div>
             <script src="https://web3forms.com/client/script.js" async defer></script>
 
-            <button id="c-send" type="submit" class="w-full rounded-full bg-emerald-500 dark:bg-emerald-400 px-7 py-3.5 text-base font-bold text-zinc-950 hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors disabled:opacity-60">
+            <button id="c-send" type="submit" data-bird data-perch="1" class="w-full rounded-full bg-emerald-500 dark:bg-emerald-400 px-7 py-3.5 text-base font-bold text-zinc-950 hover:bg-emerald-400 dark:hover:bg-emerald-300 transition-colors disabled:opacity-60">
               Send message
             </button>
             <p id="c-status" role="alert" class="min-h-5 text-sm text-red-600 dark:text-red-400"></p>

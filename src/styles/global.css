@@ -511,3 +511,26 @@ html.nav-open body { overflow: hidden; }
 @keyframes lbwig { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-14deg); } 70% { transform: rotate(12deg); } }
 @keyframes lbblink { 0%, 40%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.1); } }
 @media (prefers-reduced-motion: reduce) { .logo-bird, .logo-bird * { transition: none !important; animation: none !important; } }
+
+
+
+/* ===== Animated score rings ===== */
+.score-ring { stroke-dasharray: 125.66; stroke-dashoffset: 125.66; transition: stroke-dashoffset 1.6s cubic-bezier(.2, .8, .2, 1) var(--d, 0s); }
+.score-num { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; --n: 0; counter-reset: n var(--n); transition: --n 1.6s cubic-bezier(.2, .8, .2, 1) var(--d, 0s); }
+.score-num::after { content: counter(n); }
+.proof.go .score-ring { stroke-dashoffset: 0; }
+.proof.go .score-num { --n: 100; }
+@media (prefers-reduced-motion: reduce) { .score-ring { transition: none; stroke-dashoffset: 0; } .score-num { transition: none; --n: 100; } }
+
+
+/* Nav links: clear active state in both themes */
+.navlink { position: relative; padding-block: 0.5rem; }
+.navlink::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+  background: #059669; transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.dark .navlink::after { background: #34d399; }
+.navlink:hover::after { transform: scaleX(1); opacity: 0.45; }
+.navlink[aria-current] { color: #047857; }
+.dark .navlink[aria-current] { color: #fff; }
+.navlink[aria-current]::after { transform: scaleX(1); opacity: 1; }
