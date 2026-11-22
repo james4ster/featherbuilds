@@ -515,12 +515,27 @@ html.nav-open body { overflow: hidden; }
 
 
 /* ===== Animated score rings ===== */
-.score-ring { stroke-dasharray: 125.66; stroke-dashoffset: 125.66; transition: stroke-dashoffset 1.6s cubic-bezier(.2, .8, .2, 1) var(--d, 0s); }
-.score-num { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; --n: 0; counter-reset: n var(--n); transition: --n 1.6s cubic-bezier(.2, .8, .2, 1) var(--d, 0s); }
-.score-num::after { content: counter(n); }
-.proof.go .score-ring { stroke-dashoffset: 0; }
-.proof.go .score-num { --n: 100; }
-@media (prefers-reduced-motion: reduce) { .score-ring { transition: none; stroke-dashoffset: 0; } .score-num { transition: none; --n: 100; } }
+.score-ring {
+  stroke-dasharray: 125.66;
+  stroke-dashoffset: 125.66;
+  transition: stroke-dashoffset 1.6s cubic-bezier(.2, .8, .2, 1) var(--d, 0s);
+}
+.score-num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+.proof.go .score-ring {
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .score-ring { transition: none; stroke-dashoffset: 0; }
+}
 
 
 /* Nav links: clear active state in both themes */
