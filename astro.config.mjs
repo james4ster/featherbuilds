@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://3a60652f.featherbuilds.pages.dev',
+  site: 'https://featherbuilds.com',
   build: { inlineStylesheets: 'always' },
   vite: {
     plugins: [tailwindcss()]
