@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://YOURDOMAIN.com/sitemap-index.xml
+Sitemap: https://featherbuilds.com/sitemap-index.xml
